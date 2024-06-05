@@ -53,6 +53,8 @@
     margin: 0;
     text-align: left;
     border: none;
+    min-width: 100px;
+    text-align: center;
 }
 
 body, input, button {
@@ -196,7 +198,7 @@ input:hover{
     color:blue;
     font-style:italic;
     font-weight:400;
-    background-image: url(https://github.com/imageMageAge/imageMage.github.io/blob/main/images/loadingCircle.gif?raw=true);
+    background-image: url(https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/loadingCircle.gif?raw=true);
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
