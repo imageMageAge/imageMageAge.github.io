@@ -24,12 +24,15 @@ Abstract art (check May 30 error version)
 
 <body>
 
+<div id="coverScreen" class="hidden">
+</div>
+
 <div id="introDiv">
     <h1>Image Mage</h1>
 
     <img id="headerAnimation" src="https://github.com/imageMageAge/imageMage/blob/main/images/headerAnimation.gif?raw=true">
 
-    <p>A couple sentences explanation of what the tool does</p>
+    <p>Remix and reimagine your photos.</p>
 
 </div>
 
@@ -179,7 +182,7 @@ Abstract art (check May 30 error version)
     var blueInput = document.getElementById('blue');
     var alphaInput = document.getElementById('alpha');
 
-    //var loadingScreen = document.getElementById("loadingScreen");
+    var loadingScreen = document.getElementById("coverScreen");
     
     var smearWidthInput = document.getElementById('smearWidth');
     var smearWidth = smearWidthInput.value;
@@ -532,7 +535,8 @@ Abstract art (check May 30 error version)
         console.log("refresh");
 
         //show the loading screen
-        //loadingScreen.classList.remove("hidden");
+        loadingScreen.classList.remove("hidden");
+        loadingScreen.classList.add("lockOn");
 
         getUserInputs();
         setTimeout(drawNewImage,5);
@@ -543,7 +547,8 @@ Abstract art (check May 30 error version)
 
         if (!isImageLoaded) {
             //hide the loading screen
-            //loadingScreen.classList.add("hidden");
+            loadingScreen.classList.remove("lockOn");
+            loadingScreen.classList.add("hidden");
 
             return; // exit the function if isImageLoaded is false
         }
@@ -898,7 +903,8 @@ Abstract art (check May 30 error version)
         resizeTable();
 
         //hide the loading screen
-        //loadingScreen.classList.add("hidden");
+        loadingScreen.classList.remove("lockOn");
+        loadingScreen.classList.add("hidden");
 
     }
 

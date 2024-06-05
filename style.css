@@ -148,20 +148,22 @@ input:hover{
     display: none;
 }
 
+/*
+
 #loadingScreen {
     width: 100vw;
     text-align: center;
     background-color: #ffffff;
     color: #0e4e43;
-    position: absolute; /* make the div absolutely positioned */
-    left: 0; /* position it at the left edge of the viewport */
-    top: 0; /* position it at the top edge of the viewport */
+    position: absolute; 
+    left: 0; 
+    top: 0;
     z-index: 1;
     font-size: 18px;
     font-weight: bold;
     margin: 0;
 }
-  
+
 #loadingText, #loadingAnimation {
     display: inline-block;
 }
@@ -174,6 +176,33 @@ input:hover{
     border: 1px solid black;
     vertical-align: middle;
 }
+*/
+
+.lockOn {
+    display: block;
+    visibility: visible;
+    position: fixed;
+    z-index: 999;
+    top: 0px;
+    left: 0px;
+    width: 100vw;
+    height: 100vh;
+    background-color:white;
+    vertical-align:bottom;
+    padding-top: 20%; 
+    filter: alpha(opacity=80); 
+    opacity: 0.35; 
+    font-size:large;
+    color:blue;
+    font-style:italic;
+    font-weight:400;
+    background-image: url(https://github.com/imageMageAge/imageMage.github.io/blob/main/images/loadingCircle.gif?raw=true);
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+}
+
+
 
 button {
     padding: 6px;
