@@ -1,11 +1,11 @@
 <!--
 To dos:
-
 --Basic Functionality--
+Add default image to work with, before user uploads their own
+Turn header image into a carousel with ~3 animations / photo
 Mobile formatting -- below a certain screen width, have the two images above/below rather than side-by-side
 Export button which gives both two images collated together  
-Name ideas: Photo remixer, Photo interpreter, Image Imaginer / Image Reimagine(r), something about mining the goodness inside your photos
-Write short bio for each template at the bottom, to help users understand what's happening with the input output?
+Write short bio for each template at the bottom, to help users understand what's happening with the input-output?
 
 --New Visual Ideas--
 Pixel art (use larger pixel squares, take the average colour value from the original image)
@@ -16,11 +16,20 @@ Abstract art (check May 30 error version)
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Image Mage</title>
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <link rel="icon" href="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/imageMageLogo.png?raw=true">
-  <script src='https://joeiddon.github.io/perlin/perlin.js'></script>
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Image Mage</title>
+    
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="icon" href="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/imageMageLogo.png?raw=true">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <meta property="og:title" content="Image Mage: a free web tool for remixing and reimagining your photos" />
+    
+    <script src='https://joeiddon.github.io/perlin/perlin.js'></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
 
 <body>
@@ -29,9 +38,14 @@ Abstract art (check May 30 error version)
 </div>
 
 <div id="introDiv">
-    <h1>Image Mage</h1>
+    <table id="siteHeaderTable">
+        <tr>
+            <td id="siteNameText">Image Mage</td>
+            <td><img id="siteLogo" src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/imageMageLogo.png?raw=true"></td>
+        </tr>
+    </table>
 
-    <img id="headerAnimation" src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/headerAnimation.gif?raw=true">
+    <img id="headerAnimation" src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/headerAnimationCompress.gif?raw=true">
 
     <p>Remix and reimagine your photos.</p>
 
@@ -69,9 +83,9 @@ Abstract art (check May 30 error version)
                 <th class="inputCol1">Style</th>
                 <th class="inputCol2">RGBA Shift</th>
                 <th class="inputCol3">Smear</th>
-                <th class="inputCol4">Sensitivity (0-100)</th>
-                <th class="inputCol5">Color Range (0-100)</th>
-                <th class="inputCol6">Max Dot Size (0-100)</th>
+                <th class="inputCol4">Sensitivity</th>
+                <th class="inputCol5">Color Range</th>
+                <th class="inputCol6">Max Dot Size</th>
                 <th class="inputCol7">Color Picker</th>
             </tr>
 
@@ -97,32 +111,32 @@ Abstract art (check May 30 error version)
 
                 <td class="inputCol2">
                     <label for="red">Red:</label>
-                    <input class="input-number-noSpinners" type="number" id="red" value="95" min="0" max="500">
+                    <input class="input-number-noSpinners" type="range" id="red" value="95" min="0" max="500">
                     <label for="green">Green:</label>
-                    <input class="input-number-noSpinners" type="number" id="green" value="125" min="0" max="500">
+                    <input class="input-number-noSpinners" type="range" id="green" value="125" min="0" max="500">
                     <label for="blue">Blue:</label>
-                    <input class="input-number-noSpinners" type="number" id="blue" value="110" min="0" max="500">
+                    <input class="input-number-noSpinners" type="range" id="blue" value="110" min="0" max="500">
                     <label for="alpha">Alpha:</label>
-                    <input class="input-number-noSpinners" type="number" id="alpha" value="100" min="0" max="500">
+                    <input class="input-number-noSpinners" type="range" id="alpha" value="100" min="0" max="500">
                 </td>
                 
                 <td class="inputCol3">
-                    <label for="smearWidth">Width (0-100%):</label>
-                    <input class="input-number-noSpinners" type="number" id="smearWidth" value="100" min="0" max="100">
-                    <label for="chosenPixel">Chosen Pixel (0-100%):</label>
-                    <input class="input-number-noSpinners" type="number" id="chosenPixel" value="99" min="0" max="100">
+                    <label for="smearWidth">Width:</label>
+                    <input class="input-number-noSpinners" type="range" id="smearWidth" value="100" min="0" max="100">
+                    <label for="chosenPixel">Chosen Pixel:</label>
+                    <input class="input-number-noSpinners" type="range" id="chosenPixel" value="99" min="0" max="100">
                 </td>
 
                 <td class="inputCol4">
-                    <input class="input-number-noSpinners" type="number" id="noiseProbability" value="45" min="0" max="100">
+                    <input class="input-number-noSpinners" type="range" id="noiseProbability" value="45" min="0" max="100">
                 </td>
 
                 <td class="inputCol5">
-                    <input class="input-number-noSpinners" type="number" id="noiseColorRange" value="20" min="0" max="100">
+                    <input class="input-number-noSpinners" type="range" id="noiseColorRange" value="20" min="0" max="100">
                 </td>
 
                 <td class="inputCol6">
-                    <input class="input-number-noSpinners" type="number" id="dotSizeFactor" value="50" min="0" max="100">
+                    <input class="input-number-noSpinners" type="range" id="dotSizeFactor" value="50" min="0" max="100">
                 </td>
 
                 <td class="inputCol7">
@@ -160,13 +174,30 @@ Abstract art (check May 30 error version)
 </div>
 
 <div id="notesDiv">
-    <p>Notes and documentation go here...</p>
-    <p>Free and open source, free for personal and commercial use.</p>
-    <p>Buy me a coffee?</p>
-    <p>Explain hotkeys and tips. Explain how to make a gif.</p>
-    <p>No images are saved, all processing is done "client-side" (i.e., on your own computer).</p>
-    <p>Coded in Javascript / HTML / CSS</p>
-    <p>Links to github and instagram</p>
+    <div id="textBox">
+        <p>This web tool is completely free, open source, and does not have any paywalls or premium options. You are welcome to use it for personal or commercial purposes.</p>
+        <p>If you found this tool useful, feel free to buy me a coffee. This would be much appreciated during late night coding sessions!</p>
+        
+        <a href="https://www.buymeacoffee.com/stereoDrift" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/yellow_img.png" alt="Buy Me A Coffee"></a>
+
+        <p>A couple tips for using this tool:</p>
+        <ul>
+            <li>Press "r" to regenerate a new image. The visual templates have some randomness built in, so this gives you a fresh image</li>
+            <li>Press "s" to save an image</li>
+            <li>The gif at the top of the page was created by taking 10 different variations of a photo using higher/lower sensitivity values (the r / s hotkeys makes this pretty speedy to do!)</li>
+            <li>Then I used the Gif Maker tool provided by <a href="https://ezgif.com/maker" rel="noopener" target="_blank">Ezgif</a> to create the gif file</li>
+        </ul>
+        <p>This project is coded using Javascript, HTML, and CSS. I do not have access to any of the images that you upload here, as all processing is done "client-side" (i.e., on your own computer).</p>
+
+        <table id="infoMenuTable">
+            <tr>
+                <td><button id="gitHubButton"class="socialMediaButton"><a href="https://github.com/imageMageAge/imageMageAge.github.io" target="blank" rel="noopener"><i class="fa-brands fa-github"></i></a></button></td>
+                <td><button id="coffeeButton" class="socialMediaButton"><a href="https://www.buymeacoffee.com/stereoDrift" target="blank" rel="noopener"><i class="fa-solid fa-heart"></i></a></button></td>
+                <td><button id="instagramButton" class="socialMediaButton"><a href="https://www.instagram.com/stereo.drift/" target="blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a></button></td>
+            </tr>
+        </table>
+
+    </div>
 </div>
 
   <script>
@@ -204,15 +235,17 @@ Abstract art (check May 30 error version)
 
     var isImageLoaded = false;
     
+    /*
     //use default image if user has not uploaded anything yet
     const defaultReader = new FileReader();
     const defaultImageArrayBuffer = defaultReader.result;
     const defaultImageBlobOrFile = new Blob([defaultImageArrayBuffer], { type: 'image/jpeg' });
     defaultReader.readAsArrayBuffer(defaultImageBlobOrFile);
 
-    const defaultImageFile = new File([defaultImageArrayBuffer], 'https://github.com/imageMageAge/imageMage/blob/main/images/Hanoi2024.jpeg?raw=true', {
+    const defaultImageFile = new File([defaultImageArrayBuffer], 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/Hanoi2024.jpeg?raw=true', {
         type: 'image/jpeg',
     });
+    */
 
     var redrawButton = document.getElementById('generate-button');
     redrawButton.addEventListener('click', refresh);
@@ -322,7 +355,6 @@ Abstract art (check May 30 error version)
 
     //main method
     getUserInputs();
-    readSourceImage();
 
     // Grab new user inputs from control menu
     function getUserInputs() {
@@ -473,15 +505,18 @@ Abstract art (check May 30 error version)
         newImageContainer.removeChild(newImageContainer.firstChild);
     }
     
+    /*
     if(isImageLoaded == false){
-        //console.log("load default image");
+        console.log("load default image");
         const dt = new DataTransfer();
         dt.items.add(defaultImageFile);
         imageInput.files = dt.files;
     }
+    */
 
     //read image file
-      //console.log(imageInput.files[0]);
+      
+    //console.log(imageInput.files[0]);
       var file = imageInput.files[0];
       var reader = new FileReader();
       reader.onload = (event) => {
@@ -610,7 +645,7 @@ Abstract art (check May 30 error version)
             newCtx.drawImage(originalImage, 0, 0);
 
             //smear
-            var numSmears = 3;
+            var numSmears = 2;
 
             for(var smearCounter=0; smearCounter<numSmears; smearCounter++){
                 
