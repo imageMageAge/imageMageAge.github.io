@@ -1,0 +1,208 @@
+#introDiv{
+    width:100vw;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #581845;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+    color:white;
+}
+
+#headerAnimation{
+    max-height: 80vh;
+}
+
+#toolDiv{
+    width:100vw;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+#notesDiv{
+    width:100vw;
+    box-sizing: border-box;
+    overflow: hidden;
+    background-color: #f7e2f1;
+    padding: 10px;
+
+}
+
+#imageTable {
+    border-collapse: collapse;
+    border: none;
+    padding: 0;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    max-width: 100vw;
+  }
+  
+.imageTableCell {
+    padding: 0;
+    margin: 0;
+    text-align: left;
+    border: none;
+}
+
+.imageHeaderText {
+    font-size: 0.85em;
+    padding: 0px 0 5px 0;
+    margin: 0;
+    text-align: left;
+    border: none;
+}
+
+body, input, button {
+    font-family: "Helvetica";
+    font-style: normal;
+}
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+table {
+    border-collapse: collapse;
+    margin:auto;
+    max-width:99%;
+    /*font-size:0.9em;*/
+}
+
+th {
+    border: 2px solid white;
+    padding: 5px;
+    text-align: center;
+    vertical-align:middle;
+	border-collapse: collapse;
+	background-color: #e9e9e9;
+}
+
+#inputTable{
+    text-align: center;
+    min-width: 40vw;
+    max-width: 90vw;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+:-ms-input-placeholder { /* Internet Explorer 10-11 */
+    color: rgb(194, 194, 194);
+    font-weight: normal;
+}
+
+::-ms-input-placeholder { /* Microsoft Edge */
+    color: rgb(194, 194, 194);
+    font-weight: normal;
+}
+
+input.input-number-noSpinners {
+    -moz-appearance: textfield;
+    border:1px solid rgb(180, 180, 180);
+    padding: 6px;
+    text-align: center;
+
+}
+
+input.input-number-noSpinners::-webkit-inner-spin-button,
+input.input-number-noSpinners::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    border:1px solid rgb(180, 180, 180);
+    padding: 4px 0 4px 0;
+}
+
+input:hover{
+    background-color: rgb(246, 252, 255);
+    border:1px solid rgb(146, 146, 146);
+}
+
+.select-style {
+    border-bottom: 2px solid rgb(0, 183, 255);
+    border-left:none;
+    border-top:none;
+    border-right:none;
+    border-radius:0;
+    overflow: hidden;
+    font-weight:bold;
+    padding:1px;
+    /*
+    //-moz-appearance:none;
+    -webkit-appearance:none;
+    appearance:none;
+    */
+    text-align:center;
+    font-family: Helvetica, sans-serif;
+    font-size:0.95em;
+    outline: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}
+
+.hidden {
+    display: none;
+}
+
+#loadingScreen {
+    width: 100vw;
+    text-align: center;
+    background-color: #ffffff;
+    color: #0e4e43;
+    position: absolute; /* make the div absolutely positioned */
+    left: 0; /* position it at the left edge of the viewport */
+    top: 0; /* position it at the top edge of the viewport */
+    z-index: 1;
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0;
+}
+  
+#loadingText, #loadingAnimation {
+    display: inline-block;
+}
+
+#loadingText {
+    height: 100%;
+}
+
+#loadingText td {
+    border: 1px solid black;
+    vertical-align: middle;
+}
+
+button {
+    padding: 6px;
+    font-weight: bold;
+    font-size: 14px;
+
+    margin-left: 3px;
+    margin-right: 3px;
+
+    border: 3px solid #79e2d2;
+    border-radius: 6px;
+    background-color: #ffffff;
+
+    cursor: pointer;
+}
+
+/* Styling for image upload field */
+input[type="file"] {
+    display: none;
+}
+.custom-file-upload {
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #226f63;
+    color: #fff;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Helvetica;
+    display: inline-block;
+    padding: 8px;
+    cursor: pointer;
+}
