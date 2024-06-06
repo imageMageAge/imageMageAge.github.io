@@ -130,8 +130,7 @@ html, body {
 table {
     border-collapse: collapse;
     margin:auto;
-    max-width:99%;
-    /*font-size:0.9em;*/
+    max-width:95%;
 }
 
 th {
