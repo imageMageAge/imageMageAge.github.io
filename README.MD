@@ -7,7 +7,8 @@ Live version: <b>https://imagemageage.github.io/</b>
 * Drag the sliders / re-generate new images 
 * Enjoy :)
 
-<img src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/headerAnimationCompress.gif?raw=true"/><br />
+<img src="images/siteOGImage2.png"/><br />
+<img src="images/headerAnimationCompress.gif"/><br />
 
 I'd be very happy to discuss and collaborate on any new visual styles / ideas that you might have!
 

@@ -27,10 +27,10 @@ Abstract art (check May 30 error version)
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <meta property="og:title" content="Image Mage: a free web tool for remixing and reimagining your photos" />
-    <meta property="og:image" content="images/siteOGImage.png">
+    <meta property="og:image" content="images/siteOGImage2.png">
     <meta property="og:image:type" content="image/png" >
-    <meta property="og:image:width" content="1200" >
-    <meta property="og:image:height" content="800" >
+    <meta property="og:image:width" content="800" >
+    <meta property="og:image:height" content="798" >
 
     <script src='https://joeiddon.github.io/perlin/perlin.js'></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -56,29 +56,6 @@ Abstract art (check May 30 error version)
 </div>
 
 <div id="toolDiv">
-
-    <div id="buttonTableDiv">
-
-        <table id="buttonTable">
-            <tr>
-                <td>
-                    <label for="imageInput" class="custom-file-upload">
-                        <i class="fa fa-cloud-upload"></i> Select image
-                    </label>
-                    <input type="file" id="imageInput" accept="image/*">
-                </td>
-
-                <td>
-                    <button id="generate-button">Re-generate image (r)</button>
-                </td>
-
-                <td>
-                    <button id="save-image-button">Save image (s)</button>
-                </td>
-            </tr>
-        </table>
-
-    </div>
 
     <div id="inputTableDiv">
 
@@ -151,6 +128,27 @@ Abstract art (check May 30 error version)
         </table>
 
     </div>
+
+    <div id="buttonTableDiv">
+        <table id="buttonTable">
+            <tr>
+                <td>
+                    <label for="imageInput" class="custom-file-upload">
+                        <i class="fa fa-cloud-upload"></i> Select image
+                    </label>
+                    <input type="file" id="imageInput" accept="image/*">
+                </td>
+
+                <td>
+                    <button id="generate-button">Re-generate image (r)</button>
+                </td>
+
+                <td>
+                    <button id="save-image-button">Save image (s)</button>
+                </td>
+            </tr>
+        </table>
+    </div>
   
     <table id="imageTable" style="text-align: left">
         <tr>
@@ -169,6 +167,7 @@ Abstract art (check May 30 error version)
 
 <div id="notesDiv">
     <div id="textBox">
+
         <p>This web tool is completely free, open source, without any paywalls or premium options. You are welcome to use it for personal or commercial purposes.</p>
         <p>If you found this tool useful, feel free to buy me a coffee. This would be much appreciated during late-night coding sessions!</p>
         
@@ -182,22 +181,18 @@ Abstract art (check May 30 error version)
             <li>The GIF animation was then created using the Gif Maker tool provided by <a href="https://ezgif.com/maker" rel="noopener" target="_blank">Ezgif</a></li>
         </ul>
         <p>This project is coded using Javascript, HTML, and CSS (see github repo linked below). I do not have access to any of the images that you upload here, as all processing is done "client-side" (i.e., on your own computer).</p>
-
-        <table id="infoMenuTable">
-            <tr>
-                <td><button id="gitHubButton"class="socialMediaButton"><a href="https://github.com/imageMageAge/imageMageAge.github.io" target="blank" rel="noopener"><i class="fa-brands fa-github"></i></a></button></td>
-                <td><button id="coffeeButton" class="socialMediaButton"><a href="https://www.buymeacoffee.com/stereoDrift" target="blank" rel="noopener"><i class="fa-solid fa-heart"></i></a></button></td>
-                <td><button id="instagramButton" class="socialMediaButton"><a href="https://www.instagram.com/stereo.drift/" target="blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a></button></td>
-            </tr>
-        </table>
-
-        <!--
-        <div id="defaultImageContainer">
-            <img id="defaultImage" src="images/HK2024.jpg">
-        </div>
-        -->
-
+        <p>I'm working on some new visual styles which I hope to add soon. Let me know if you have ideas 💡</p>
     </div>
+</div>
+
+<div id="linksDiv">
+    <table id="infoMenuTable">
+        <tr>
+            <td><button id="gitHubButton"class="socialMediaButton"><a href="https://github.com/imageMageAge/imageMageAge.github.io" target="blank" rel="noopener"><i class="fa-brands fa-github"></i></a></button></td>
+            <td><button id="coffeeButton" class="socialMediaButton"><a href="https://www.buymeacoffee.com/stereoDrift" target="blank" rel="noopener"><i class="fa-solid fa-heart"></i></a></button></td>
+            <td><button id="instagramButton" class="socialMediaButton"><a href="https://www.instagram.com/stereo.drift/" target="blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a></button></td>
+        </tr>
+    </table>
 </div>
 
   <script>
@@ -533,6 +528,7 @@ Abstract art (check May 30 error version)
                 //console.log(pixels);
                 isImageLoaded = true;
                 drawNewImage();
+                window.scrollTo(0, 0);
             }
 
         }

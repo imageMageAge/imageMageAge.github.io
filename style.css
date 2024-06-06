@@ -54,11 +54,11 @@
     width:100vw;
     box-sizing: border-box;
     overflow: hidden;
-    background-color: #faebf6;
     padding: 10px;
     display: flex;
     justify-content: center;
     align-items: center;
+    border-top: 5px solid #581845;
 }
 
 #textBox {
@@ -66,9 +66,16 @@
     max-width: 75vw;
 }
 
+#linksDiv{
+    background-color: #faebf6;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 #buttonTableDiv{
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 2px;
+    margin-bottom: 25px;
 }
 
 #inputTable{
@@ -76,8 +83,8 @@
     text-align: center;
     min-width: 280px;
     max-width: 500px;
-    margin-top: 20px;
-    margin-bottom: 25px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding-bottom: 7px;
     border-bottom: 1px solid black;
 }
