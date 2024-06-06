@@ -4,7 +4,6 @@ To dos:
 Add default image to work with, before user uploads their own
 Turn header image into a carousel with ~3 animations / photo
 Mobile formatting -- below a certain screen width, have the two images above/below rather than side-by-side
-Roller visual is not working on mobile (loads forever -- need to reduce intensity?)
 Export button which gives both two images collated together  
 Write short bio for each template at the bottom, to help users understand what's happening with the input-output?
 
@@ -133,7 +132,7 @@ Abstract art (check May 30 error version)
                 </td>
 
                 <td class="inputCol5">
-                    <input class="input-number-noSpinners" type="range" id="noiseColorRange" value="20" min="0" max="100">
+                    <input class="input-number-noSpinners" type="range" id="noiseColorRange" value="35" min="0" max="100">
                 </td>
 
                 <td class="inputCol6">
@@ -370,7 +369,10 @@ Abstract art (check May 30 error version)
 
     //main method
     getUserInputs();
-
+    loadDefaultImage().then(() => {
+        console.log('Image loaded and pixel data read');
+    });
+    
     // Grab new user inputs from control menu
     function getUserInputs() {
 
@@ -507,6 +509,27 @@ Abstract art (check May 30 error version)
 
         }
         
+    }
+
+    async function loadDefaultImage() {
+        const imageUrl = 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true';
+        const img = document.createElement('img');
+        img.src = imageUrl;
+        imageContainer.appendChild(img);
+        
+        await img.decode();
+        
+        const canvas = document.createElement('canvas');
+        canvas.width = img.width;
+        canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        
+        pixelData = ctx.getImageData(0, 0, img.width, img.height);
+        pixels = pixelData.data;
+        
+        // Do something with the pixel colors
+        console.log(pixels);
     }
 
     function readSourceImage(){
