@@ -553,6 +553,7 @@ Abstract art (check May 30 error version)
 
           scaledHeight = actualHeight * widthScalingRatio;
 
+          /* Old code which displays as image object
           const svg = d3.select('#imageContainer')
             .append('svg')
             .attr('width', scaledWidth)
@@ -561,6 +562,14 @@ Abstract art (check May 30 error version)
             .attr('xlink:href', imageData)
             .attr('width', scaledWidth)
             .attr('height', scaledHeight);
+        */
+
+        /* New code which shows as an img object instead */
+        var originalImg = document.createElement('img');
+        originalImg.src = imageData;
+        originalImg.width = scaledWidth;
+        originalImg.height = scaledHeight;
+        imageContainer.appendChild(originalImg);
 
           // Get the pixel colors
           const canvas = document.createElement('canvas');
@@ -656,7 +665,7 @@ Abstract art (check May 30 error version)
             console.log("running roller visual");
 
             //faithful reproduction
-            var originalImage = imageContainer.querySelector('image');
+            var originalImage = imageContainer.querySelector('img');
             newCtx.drawImage(originalImage, 0, 0);
 
             /*
@@ -952,26 +961,12 @@ Abstract art (check May 30 error version)
         newImage.style.width = `${scaledWidth}px`;
         newImageContainer.appendChild(newImage);
 
-        //resizeImages();
         resizeTable();
 
         //hide the loading screen
         loadingScreen.classList.remove("lockOn");
         loadingScreen.classList.add("hidden");
 
-    }
-
-    // function to resize images so that they are shown side-by-side on the page
-    function resizeImages(){
-        
-        // Select the images themselves
-        const image1 = imageContainer.querySelector('image');
-        const image2 = newImageContainer.querySelector('img');
-
-        image1.style.width = `${maxImageWidth}px`; 
-        image2.style.width = `${maxImageWidth}px`;
-
-        resizeTable();
     }
 
     function resizeTable(){
