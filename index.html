@@ -1,7 +1,6 @@
 <!--
 To dos:
 --Basic Functionality--
-Add default image to work with, before user uploads their own
 Turn header image into a carousel with ~3 animations / photo
 Mobile formatting -- below a certain screen width, have the two images above/below rather than side-by-side
 Export button which gives both two images collated together  
@@ -148,16 +147,6 @@ Abstract art (check May 30 error version)
 
     </div>
   
-    <!---
-        <div id="loadingScreen" class="hidden">
-
-        <div class="container">
-            <div id="loadingAnimation"><img src="https://github.com/imageMageAge/imageMage/blob/main/images/loadingAnimation.gif?raw=true" height="90"></div>
-        </div>
-
-    </div>
-    -->
-
     <table id="imageTable" style="text-align: left">
         <tr>
             <td class="imageHeaderText">Source Image</td>
@@ -521,7 +510,7 @@ Abstract art (check May 30 error version)
             actualWidth = defaultImage.width;
             actualHeight = defaultImage.height;
 
-            console.log("Default image dimensions: "+actualWidth+", "+actualHeight);
+            //console.log("Default image dimensions: "+actualWidth+", "+actualHeight);
                     
             if(actualWidth >= maxImageWidth){
             scaledWidth = maxImageWidth;;
@@ -556,7 +545,7 @@ Abstract art (check May 30 error version)
                 ctx.drawImage(img, 0, 0);
                 pixelData = ctx.getImageData(0, 0, actualWidth, actualHeight);
                 pixels = pixelData.data;
-                console.log(pixels);
+                //console.log(pixels);
                 isImageLoaded = true;
                 drawNewImage();
             }
@@ -700,7 +689,7 @@ Abstract art (check May 30 error version)
             newCtx.drawImage(originalImage, 0, 0);
 
             //smear effect
-            var numSmears = 2;
+            var numSmears = 3;
 
             for(var smearCounter=0; smearCounter<numSmears; smearCounter++){
                 

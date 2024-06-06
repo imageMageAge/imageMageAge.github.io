@@ -240,10 +240,9 @@ input:hover{
     left: 0px;
     width: 100vw;
     height: 100vh;
-    background-color:white;
+    background-color: rgba(255, 255, 255, 0.25);
     padding-top: 20%; 
-    filter: alpha(opacity=80); 
-    opacity: 0.35; 
+    opacity: 0.9; 
     font-size:large;
     color:blue;
     font-style:italic;
@@ -255,6 +254,10 @@ input:hover{
 }
 
 /* Styling for image upload field */
+input, select {
+    cursor: pointer;
+}
+
 input[type="file"] {
     display: none;
 }
