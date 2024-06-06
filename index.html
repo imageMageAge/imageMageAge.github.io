@@ -252,7 +252,7 @@ Abstract art (check May 30 error version)
     redrawButton.addEventListener('click', refresh);
 
     var screenWidth = window.innerWidth; // get the width of the browser screen
-    var maxImageWidth = (screenWidth*0.98) / 2; // max width for each of the two images
+    var maxImageWidth = (screenWidth*0.96) / 2; // max width for each of the two images
 
     //Save and export the new image in png format
     var saveButton = document.getElementById('save-image-button');
@@ -267,9 +267,23 @@ Abstract art (check May 30 error version)
         const link = document.createElement('a');
         const date = new Date();
         const filename = `image_${date.toLocaleDateString()}_${date.toLocaleTimeString()}.png`;
+        
+        // Create a blob from the image
+        fetch(imageUrl)
+            .then(response => response.blob())
+            .then(blob => {
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            link.click();
+            });
+
+        /*
         link.href = imageUrl;
         link.download = filename;
         link.click();
+        */
     }
     
     var actualWidth;
