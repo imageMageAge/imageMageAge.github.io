@@ -20,12 +20,24 @@
 }
 
 #siteLogo{
-    width: 115px;
+    width: 95px;
 }
 
 #headerAnimation{
-    max-height: 75vh;
+    max-height: 65vh;
 }
+
+/* applies when screen is wide enough */ 
+@media (min-width: 600px) {
+    #siteLogo {
+      width: 115px;
+    }
+
+    #headerAnimation{
+        max-height: 75vh;
+    }
+}
+
 
 #toolDiv{
     width:100vw;
@@ -59,11 +71,11 @@
 
 #inputTable{
     text-align: center;
-    min-width: 40vw;
-    max-width: 90vw;
+    min-width: 300px;
+    max-width: 500px;
     margin-top: 20px;
     margin-bottom: 25px;
-    padding-bottom: 5px;
+    padding-bottom: 7px;
     border-bottom: 1px solid black;
 }
 
@@ -231,21 +243,6 @@ input:hover{
     background-position: center;
 }
 
-button {
-    padding: 6px;
-    font-weight: bold;
-    font-size: 14px;
-
-    margin-left: 3px;
-    margin-right: 3px;
-
-    border: 3px solid #79e2d2;
-    border-radius: 6px;
-    background-color: #ffffff;
-
-    cursor: pointer;
-}
-
 /* Styling for image upload field */
 input[type="file"] {
     display: none;
@@ -259,10 +256,25 @@ input[type="file"] {
     font-size: 16px;
     font-family: Helvetica;
     display: inline-block;
-    padding: 10px;
+    padding: 9px;
     cursor: pointer;
-    margin-left: 6px;
-    margin-right: 6px;
+    margin-left: 3px;
+    margin-right: 2px;
+}
+
+button {
+    padding: 6px;
+    font-weight: bold;
+    font-size: 14px;
+
+    margin-left: 3px;
+    margin-right: 3px;
+
+    border: 3px solid #79e2d2;
+    border-radius: 6px;
+    background-color: #ffffff;
+
+    cursor: pointer;
 }
 
 /* Styling for table with github and social links */
@@ -284,8 +296,8 @@ input[type="file"] {
     margin: 0;
     padding: 4px;
     border: none;
-    max-width: 20px;
-    max-height: 20px;
+    max-width: 50px;
+    max-height: 50px;
     background-color: transparent;
 }
 
