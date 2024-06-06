@@ -4,7 +4,7 @@ To dos:
 Add default image to work with, before user uploads their own
 Turn header image into a carousel with ~3 animations / photo
 Mobile formatting -- below a certain screen width, have the two images above/below rather than side-by-side
-Save image function doesn't work on mobile
+Roller visual is not working on mobile (loads forever -- need to reduce intensity?)
 Export button which gives both two images collated together  
 Write short bio for each template at the bottom, to help users understand what's happening with the input-output?
 
@@ -1041,7 +1041,9 @@ Abstract art (check May 30 error version)
         var smearWidth = Math.round(Math.random()*actualWidth*(noiseProbability/100));
         var smearHeight = Math.round(Math.random()*actualHeight*(noiseProbability/100));
         
-        for(var i=0; i<smearHeight; i++){
+        var pixelSize = Math.ceil(Math.max(actualWidth,actualHeight)/500);
+
+        for(var i=0; i<smearHeight; i+=pixelSize){
 
             var currentDataValue = ((smearStartingY+i)*actualWidth + smearStartingX)*4;
 
@@ -1049,12 +1051,12 @@ Abstract art (check May 30 error version)
             var newGreen = pixels[currentDataValue+1];
             var newBlue = pixels[currentDataValue+2];
 
-            for(var j=0; j<smearWidth; j++){
+            for(var j=0; j<smearWidth; j+=pixelSize){
 
                 var newAlpha = 1 - (j/smearWidth);
 
                 newCtx.fillStyle = `rgba(${newRed}, ${newGreen}, ${newBlue}, ${newAlpha})`;
-                newCtx.fillRect(smearStartingX+j, smearStartingY+i, 1, 1);
+                newCtx.fillRect(smearStartingX+j, smearStartingY+i, pixelSize, pixelSize);
 
             }
         }
@@ -1066,7 +1068,9 @@ Abstract art (check May 30 error version)
         var smearWidth = Math.round(Math.random()*actualWidth*(noiseProbability/100));
         var smearHeight = Math.round(Math.random()*actualHeight*(noiseProbability/100));
         
-        for(var i=0; i<smearHeight; i++){
+        var pixelSize = Math.ceil(Math.max(actualWidth,actualHeight)/500);
+
+        for(var i=0; i<smearHeight; i+=pixelSize){
 
             var currentDataValue = ((smearStartingY+i)*actualWidth + smearStartingX)*4;
 
@@ -1074,12 +1078,12 @@ Abstract art (check May 30 error version)
             var newGreen = pixels[currentDataValue+1];
             var newBlue = pixels[currentDataValue+2];
 
-            for(var j=0; j<smearWidth; j++){
+            for(var j=0; j<smearWidth; j+=pixelSize){
 
                 var newAlpha = 1 - (j/smearWidth);
 
                 newCtx.fillStyle = `rgba(${newRed}, ${newGreen}, ${newBlue}, ${newAlpha})`;
-                newCtx.fillRect(smearStartingX-j, smearStartingY+i, 1, 1);
+                newCtx.fillRect(smearStartingX-j, smearStartingY+i, pixelSize, pixelSize);
 
             }
         }
@@ -1091,7 +1095,9 @@ Abstract art (check May 30 error version)
         var smearWidth = Math.round(Math.random()*actualWidth*(noiseProbability/100));
         var smearHeight = Math.round(Math.random()*actualHeight*(noiseProbability/100));
         
-        for(var i=0; i<smearWidth; i++){
+        var pixelSize = Math.ceil(Math.max(actualWidth,actualHeight)/500);
+
+        for(var i=0; i<smearWidth; i += pixelSize){
 
             var currentDataValue = (smearStartingX + i)*4;
 
@@ -1099,12 +1105,12 @@ Abstract art (check May 30 error version)
             var newGreen = pixels[currentDataValue+1];
             var newBlue = pixels[currentDataValue+2];
 
-            for(var j=0; j<smearHeight; j++){
+            for(var j=0; j<smearHeight; j += pixelSize){
 
                 var newAlpha = 1 - (j/smearHeight);
 
                 newCtx.fillStyle = `rgba(${newRed}, ${newGreen}, ${newBlue}, ${newAlpha})`;
-                newCtx.fillRect(smearStartingX+i, smearStartingY+j, 1, 1);
+                newCtx.fillRect(smearStartingX+i, smearStartingY+j, pixelSize, pixelSize);
 
             }
         }
@@ -1116,7 +1122,9 @@ Abstract art (check May 30 error version)
         var smearWidth = Math.round(Math.random()*actualWidth*(noiseProbability/100));
         var smearHeight = Math.round(Math.random()*actualHeight*(noiseProbability/100));
         
-        for(var i=0; i<smearWidth; i++){
+        var pixelSize = Math.ceil(Math.max(actualWidth,actualHeight)/500);
+
+        for(var i=0; i<smearWidth; i+=pixelSize){
 
             var currentDataValue = ((smearStartingX+i)+(smearStartingY*actualWidth)) *4;
 
@@ -1124,12 +1132,12 @@ Abstract art (check May 30 error version)
             var newGreen = pixels[currentDataValue+1];
             var newBlue = pixels[currentDataValue+2];
 
-            for(var j=0; j<smearHeight; j++){
+            for(var j=0; j<smearHeight; j+=pixelSize){
 
                 var newAlpha = 1 - (j/smearHeight);
 
                 newCtx.fillStyle = `rgba(${newRed}, ${newGreen}, ${newBlue}, ${newAlpha})`;
-                newCtx.fillRect(smearStartingX+i, smearStartingY-j, 1, 1);
+                newCtx.fillRect(smearStartingX+i, smearStartingY-j, pixelSize, pixelSize);
 
             }
         }
