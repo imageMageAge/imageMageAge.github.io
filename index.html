@@ -197,19 +197,22 @@ Abstract art (check May 30 error version)
             </tr>
         </table>
 
+        <!--
         <div id="defaultImageContainer">
-            <img id="defaultImage" src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true">
+            <img id="defaultImage" src="images/HK2024.jpg">
         </div>
+        -->
+
 
     </div>
 </div>
 
   <script>
 
-/*
+    /*
     var defaultImage = document.getElementById('defaultImage')
     defaultImage.onload = showDefaultImage;
-*/
+    */
 
     var imageInput = document.getElementById('imageInput');
     var imageContainer = document.getElementById('imageContainer');
@@ -245,18 +248,6 @@ Abstract art (check May 30 error version)
 
     var isImageLoaded = false;
     
-    /*
-    //use default image if user has not uploaded anything yet
-    const defaultReader = new FileReader();
-    const defaultImageArrayBuffer = defaultReader.result;
-    const defaultImageBlobOrFile = new Blob([defaultImageArrayBuffer], { type: 'image/jpeg' });
-    defaultReader.readAsArrayBuffer(defaultImageBlobOrFile);
-
-    const defaultImageFile = new File([defaultImageArrayBuffer], 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/Hanoi2024.jpeg?raw=true', {
-        type: 'image/jpeg',
-    });
-    */
-
     var redrawButton = document.getElementById('generate-button');
     redrawButton.addEventListener('click', refresh);
 
@@ -379,7 +370,7 @@ Abstract art (check May 30 error version)
 
     //main method
     getUserInputs();
-    uploadDefaultImage();
+    showDefaultImage();
 
     // Grab new user inputs from control menu
     function getUserInputs() {
@@ -519,83 +510,57 @@ Abstract art (check May 30 error version)
         
     }
 
-    async function uploadDefaultImage(){
-        const image = 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true'; // URL or base64-encoded string
-        const blob = await fetch(image).blob();
-        const file = new File([blob], 'HK2024.jpg', { type: 'image/jpeg' });
-        const fileList = [file];
-        imageInput.files = fileList;
-        imageInput.dispatchEvent(new Event('change'));
-    }
-
     function showDefaultImage() {
         
-        var defaultImage = defaultImageContainer.querySelector('img');
-        
-        actualWidth = defaultImage.width;
-        actualHeight = defaultImage.height;
+        //var defaultImage = defaultImageContainer.querySelector('img');
+        var defaultImage = new Image();
+        defaultImage.src = 'images/HK2024.jpg';
 
-        console.log("Default image dimensions: "+actualWidth+", "+actualHeight);
-                
-        if(actualWidth >= maxImageWidth){
-        scaledWidth = maxImageWidth;;
-        } else{
-        scaledWidth = Math.min(maxImageWidth,actualWidth*2);
-        }
+        defaultImage.onload = () => {
 
-        widthScalingRatio = scaledWidth / actualWidth;
-        scaledHeight = actualHeight * widthScalingRatio;
+            actualWidth = defaultImage.width;
+            actualHeight = defaultImage.height;
 
-        newCanvas = document.createElement('canvas');
-        newCtx = newCanvas.getContext('2d');
+            console.log("Default image dimensions: "+actualWidth+", "+actualHeight);
+                    
+            if(actualWidth >= maxImageWidth){
+            scaledWidth = maxImageWidth;;
+            } else{
+            scaledWidth = Math.min(maxImageWidth,actualWidth*2);
+            }
 
-        newCanvas.width = actualWidth;
-        newCanvas.height = actualHeight;
+            widthScalingRatio = scaledWidth / actualWidth;
+            scaledHeight = actualHeight * widthScalingRatio;
 
-        newCtx.drawImage(defaultImage, 0, 0);
+            newCanvas = document.createElement('canvas');
+            newCtx = newCanvas.getContext('2d');
 
-        const newImageData = newCanvas.toDataURL();
-        const newImage = new Image();
-        newImage.src = newImageData;
-        newImage.style.width = `${scaledWidth}px`;
-        imageContainer.appendChild(newImage);
-        
-        /*
-        var imageUrl = 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true';
-        var img = document.createElement('img');
-        img.src = imageUrl;
-        img.crossOrigin = 'anonymous';
+            newCanvas.width = actualWidth;
+            newCanvas.height = actualHeight;
 
-        actualWidth = img.width;
-        actualHeight = img.height;
-                
-        if(actualWidth >= maxImageWidth){
-        scaledWidth = maxImageWidth;;
-        } else{
-        scaledWidth = Math.min(maxImageWidth,actualWidth*2);
-        }
+            newCtx.drawImage(defaultImage, 0, 0);
 
-        widthScalingRatio = scaledWidth / actualWidth;
-        scaledHeight = actualHeight * widthScalingRatio;
+            const newImageData = newCanvas.toDataURL();
+            const newImage = new Image();
+            newImage.src = newImageData;
+            newImage.style.width = `${scaledWidth}px`;
+            imageContainer.appendChild(newImage);
 
-        imageContainer.appendChild(img);
+            var img = imageContainer.querySelector('img');
 
-        capturePixelData();
-        */
-    }
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                canvas.width = actualWidth;
+                canvas.height = actualHeight;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0);
+                pixelData = ctx.getImageData(0, 0, actualWidth, actualHeight);
+                pixels = pixelData.data;
+                console.log(pixels);
+                isImageLoaded = true;
+                drawNewImage();
+            }
 
-    function capturePixelData(){
-        const img = imageContainer.querySelector('img');
-
-        img.onload = () => {
-            const canvas = document.createElement('canvas');
-            canvas.width = img.width;
-            canvas.height = img.height;
-            const ctx = canvas.getContext('2d');
-            ctx.drawImage(img, 0, 0);
-            pixelData = ctx.getImageData(0, 0, img.width, img.height);
-            pixels = pixelData.data;
-            console.log(pixels);
         }
     }
 
@@ -609,19 +574,8 @@ Abstract art (check May 30 error version)
     while (newImageContainer.firstChild) {
         newImageContainer.removeChild(newImageContainer.firstChild);
     }
-    
-    /*
-    if(isImageLoaded == false){
-        console.log("load default image");
-        const dt = new DataTransfer();
-        dt.items.add(defaultImageFile);
-        imageInput.files = dt.files;
-    }
-    */
 
-    //read image file
-      
-    //console.log(imageInput.files[0]);
+    //read image file      
       var file = imageInput.files[0];
       var reader = new FileReader();
       reader.onload = (event) => {
@@ -643,18 +597,6 @@ Abstract art (check May 30 error version)
 
           scaledHeight = actualHeight * widthScalingRatio;
 
-          /* Old code which displays as image object
-          const svg = d3.select('#imageContainer')
-            .append('svg')
-            .attr('width', scaledWidth)
-            .attr('height', scaledHeight);
-          svg.append('image')
-            .attr('xlink:href', imageData)
-            .attr('width', scaledWidth)
-            .attr('height', scaledHeight);
-        */
-
-        /* New code which shows as an img object instead */
         var originalImg = document.createElement('img');
         originalImg.src = imageData;
         originalImg.width = scaledWidth;
@@ -699,7 +641,6 @@ Abstract art (check May 30 error version)
             //hide the loading screen
             loadingScreen.classList.remove("lockOn");
             loadingScreen.classList.add("hidden");
-
             return; // exit the function if isImageLoaded is false
         }
 
