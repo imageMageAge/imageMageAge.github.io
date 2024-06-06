@@ -22,11 +22,16 @@ Abstract art (check May 30 error version)
     <title>Image Mage</title>
     
     <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="icon" href="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/imageMageLogo.png?raw=true">
+    <link rel="icon" href="images/imageMageLogo.png">
+    <link rel="apple-touch-icon" href="images/imageMageLogo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <meta property="og:title" content="Image Mage: a free web tool for remixing and reimagining your photos" />
-    
+    <meta property="og:image" content="images/siteOGImage.png">
+    <meta property="og:image:type" content="image/png" >
+    <meta property="og:image:width" content="1200" >
+    <meta property="og:image:height" content="800" >
+
     <script src='https://joeiddon.github.io/perlin/perlin.js'></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
 </head>
@@ -40,11 +45,11 @@ Abstract art (check May 30 error version)
     <table id="siteHeaderTable">
         <tr>
             <td id="siteNameText">Image Mage</td>
-            <td><img id="siteLogo" src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/imageMageLogo.png?raw=true"></td>
+            <td><img id="siteLogo" src="images/imageMageLogo.png"></td>
         </tr>
     </table>
 
-    <img id="headerAnimation" src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/headerAnimationCompress.gif?raw=true">
+    <img id="headerAnimation" src="images/headerAnimationCompress.gif">
 
     <p>Remix and reimagine your photos.</p>
 
@@ -192,16 +197,10 @@ Abstract art (check May 30 error version)
         </div>
         -->
 
-
     </div>
 </div>
 
   <script>
-
-    /*
-    var defaultImage = document.getElementById('defaultImage')
-    defaultImage.onload = showDefaultImage;
-    */
 
     var imageInput = document.getElementById('imageInput');
     var imageContainer = document.getElementById('imageContainer');
@@ -268,11 +267,6 @@ Abstract art (check May 30 error version)
             link.click();
             });
     
-        /*
-        link.href = imageUrl;
-        link.download = filename;
-        link.click();
-        */
     }
     
     var actualWidth;
@@ -333,15 +327,6 @@ Abstract art (check May 30 error version)
         }
 
     });
-
-    /*
-    //code to prevent browser window from exceeding initial width
-    window.addEventListener('resize', function() {
-    if (window.innerWidth > screenWidth) {
-        window.innerWidth = screenWidth;
-    }
-    });
-    */
 
     // Add event listeners to the input boxes
     imageInput.addEventListener('change', readSourceImage);
@@ -515,7 +500,7 @@ Abstract art (check May 30 error version)
             if(actualWidth >= maxImageWidth){
             scaledWidth = maxImageWidth;;
             } else{
-            scaledWidth = Math.min(maxImageWidth,actualWidth*2);
+            scaledWidth = Math.min(maxImageWidth,actualWidth*1.0);
             }
 
             widthScalingRatio = scaledWidth / actualWidth;
@@ -689,7 +674,7 @@ Abstract art (check May 30 error version)
             newCtx.drawImage(originalImage, 0, 0);
 
             //smear effect
-            var numSmears = 3;
+            var numSmears = 4;
 
             for(var smearCounter=0; smearCounter<numSmears; smearCounter++){
                 
