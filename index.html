@@ -197,10 +197,18 @@ Abstract art (check May 30 error version)
             </tr>
         </table>
 
+        <div id="defaultImageContainer">
+            <img id="defaultImage" crossorigin="anonymous" src="https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true">
+        </div>
+
     </div>
 </div>
 
   <script>
+
+    var defaultImage = document.getElementById('defaultImage')
+    defaultImage.onload = showDefaultImage;
+
     var imageInput = document.getElementById('imageInput');
     var imageContainer = document.getElementById('imageContainer');
     var pixelColors = document.getElementById('pixelColors');
@@ -369,7 +377,7 @@ Abstract art (check May 30 error version)
 
     //main method
     getUserInputs();
-    showDefaultImage();
+    //showDefaultImage();
 
     // Grab new user inputs from control menu
     function getUserInputs() {
@@ -510,6 +518,38 @@ Abstract art (check May 30 error version)
     }
 
     function showDefaultImage() {
+        
+        var defaultImage = defaultImageContainer.querySelector('img');
+        
+        actualWidth = defaultImage.width;
+        actualHeight = defaultImage.height;
+
+        console.log("Default image dimensions: "+actualWidth+", "+actualHeight);
+                
+        if(actualWidth >= maxImageWidth){
+        scaledWidth = maxImageWidth;;
+        } else{
+        scaledWidth = Math.min(maxImageWidth,actualWidth*2);
+        }
+
+        widthScalingRatio = scaledWidth / actualWidth;
+        scaledHeight = actualHeight * widthScalingRatio;
+
+        newCanvas = document.createElement('canvas');
+        newCtx = newCanvas.getContext('2d');
+
+        newCanvas.width = actualWidth;
+        newCanvas.height = actualHeight;
+
+        newCtx.drawImage(defaultImage, 0, 0);
+
+        const newImageData = newCanvas.toDataURL();
+        const newImage = new Image();
+        newImage.src = newImageData;
+        newImage.style.width = `${scaledWidth}px`;
+        imageContainer.appendChild(newImage);
+        
+        /*
         var imageUrl = 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true';
         var img = document.createElement('img');
         img.src = imageUrl;
@@ -530,6 +570,7 @@ Abstract art (check May 30 error version)
         imageContainer.appendChild(img);
 
         capturePixelData();
+        */
     }
 
     function capturePixelData(){
