@@ -1,7 +1,9 @@
 #introDiv{
-    width:100vw;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
     box-sizing: border-box;
-    overflow: hidden;
+
     background-color: #581845;
     padding-top: 10px;
     padding-bottom: 10px;
@@ -34,7 +36,7 @@
     }
 
     #headerAnimation{
-        max-height: 75vh;
+        max-height: 76vh;
     }
 }
 
@@ -70,13 +72,21 @@
 }
 
 #inputTable{
+    font-size:0.95em;
     text-align: center;
-    min-width: 300px;
+    min-width: 280px;
     max-width: 500px;
     margin-top: 20px;
     margin-bottom: 25px;
     padding-bottom: 7px;
     border-bottom: 1px solid black;
+}
+
+/* applies when screen is wide enough */ 
+@media (min-width: 600px) {
+    #inputTable {
+        font-size:1em;
+    }
 }
 
 #imageTable {
@@ -113,6 +123,8 @@ body, input, button {
 html, body {
     max-width: 100%;
     overflow-x: hidden;
+    margin: 0;
+    padding: 0;
 }
 
 table {
@@ -265,7 +277,7 @@ input[type="file"] {
 button {
     padding: 6px;
     font-weight: bold;
-    font-size: 14px;
+    font-size: 13px;
 
     margin-left: 3px;
     margin-right: 3px;
@@ -275,6 +287,13 @@ button {
     background-color: #ffffff;
 
     cursor: pointer;
+}
+
+/* applies when screen is wide enough */ 
+@media (min-width: 600px) {
+    button {
+      font-size: 14px;
+    }
 }
 
 /* Styling for table with github and social links */
