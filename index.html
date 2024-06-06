@@ -206,8 +206,10 @@ Abstract art (check May 30 error version)
 
   <script>
 
+/*
     var defaultImage = document.getElementById('defaultImage')
     defaultImage.onload = showDefaultImage;
+*/
 
     var imageInput = document.getElementById('imageInput');
     var imageContainer = document.getElementById('imageContainer');
@@ -377,7 +379,7 @@ Abstract art (check May 30 error version)
 
     //main method
     getUserInputs();
-    //showDefaultImage();
+    uploadDefaultImage();
 
     // Grab new user inputs from control menu
     function getUserInputs() {
@@ -515,6 +517,15 @@ Abstract art (check May 30 error version)
 
         }
         
+    }
+
+    async function uploadDefaultImage(){
+        const image = 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true'; // URL or base64-encoded string
+        const blob = await fetch(image).blob();
+        const file = new File([blob], 'HK2024.jpg', { type: 'image/jpeg' });
+        const fileList = [file];
+        imageInput.files = fileList;
+        imageInput.dispatchEvent(new Event('change'));
     }
 
     function showDefaultImage() {
