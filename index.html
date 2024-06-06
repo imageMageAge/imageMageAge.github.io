@@ -369,10 +369,8 @@ Abstract art (check May 30 error version)
 
     //main method
     getUserInputs();
-    loadDefaultImage().then(() => {
-        console.log('Image loaded and pixel data read');
-    });
-    
+    showDefaultImage();
+
     // Grab new user inputs from control menu
     function getUserInputs() {
 
@@ -511,25 +509,42 @@ Abstract art (check May 30 error version)
         
     }
 
-    async function loadDefaultImage() {
-        const imageUrl = 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true';
-        const img = document.createElement('img');
+    function showDefaultImage() {
+        var imageUrl = 'https://github.com/imageMageAge/imageMageAge.github.io/blob/main/images/HK2024.jpg?raw=true';
+        var img = document.createElement('img');
         img.src = imageUrl;
+        img.crossOrigin = 'anonymous';
+
+        actualWidth = img.width;
+        actualHeight = img.height;
+                
+        if(actualWidth >= maxImageWidth){
+        scaledWidth = maxImageWidth;;
+        } else{
+        scaledWidth = Math.min(maxImageWidth,actualWidth*2);
+        }
+
+        widthScalingRatio = scaledWidth / actualWidth;
+        scaledHeight = actualHeight * widthScalingRatio;
+
         imageContainer.appendChild(img);
-        
-        await img.decode();
-        
-        const canvas = document.createElement('canvas');
-        canvas.width = img.width;
-        canvas.height = img.height;
-        const ctx = canvas.getContext('2d');
-        ctx.drawImage(img, 0, 0);
-        
-        pixelData = ctx.getImageData(0, 0, img.width, img.height);
-        pixels = pixelData.data;
-        
-        // Do something with the pixel colors
-        console.log(pixels);
+
+        capturePixelData();
+    }
+
+    function capturePixelData(){
+        const img = imageContainer.querySelector('img');
+
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            canvas.width = img.width;
+            canvas.height = img.height;
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0);
+            pixelData = ctx.getImageData(0, 0, img.width, img.height);
+            pixels = pixelData.data;
+            console.log(pixels);
+        }
     }
 
     function readSourceImage(){
