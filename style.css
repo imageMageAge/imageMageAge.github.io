@@ -200,12 +200,20 @@ input:hover{
     outline: none;
 }
 
+#paletteChoice{
+    border-bottom: 2px solid rgb(212, 0, 255) !important;
+}
+
 .select-style select:focus {
     outline: none;
 }
 
 .hidden {
     display: none;
+}
+
+.inputCol8{
+    max-width:200px;
 }
 
 /*

@@ -5,14 +5,10 @@ Turn header image into a carousel with ~3 animations / photo
 Mobile formatting -- below a certain screen width, have the two images above/below rather than side-by-side
 Export button which gives both two images collated together  
 Write short bio for each template at the bottom, to help users understand what's happening with the input-output?
-Adjust scaled image height so that it doesn't exceed viewport height
 
 --New Visual Ideas--
 Pixel art (use larger pixel squares, take the average colour value from the original image)
-Vaporwave aeshetic filter
 Abstract art (check May 30 error version)
-For palletize -- create new column for pre-selected color palettes (vaporwave, matrix, B&W, earth tones, etc... and also for custom)
-Ability to save custom palette?
 -->
 
 <!DOCTYPE html>
@@ -132,9 +128,11 @@ Ability to save custom palette?
                     <select id="paletteChoice" class="select-style userInput">
                         <option value="mage" selected="selected">Mage</option>
                         <option value="viridis">Viridis</option>
+                        <option value="analog">Analog</option>
                         <option value="inferno">Inferno</option>
                         <option value="vaporwave">Vaporwave</option>
                         <option value="bohemian">Bohemian</option>
+                        <option value="custom">Custom >></option>
                     </select>
                 </td>
 
@@ -255,6 +253,7 @@ Ability to save custom palette?
     var paletteChoiceInput = document.getElementById('paletteChoice');
     var paletteChoice = paletteChoiceInput.value;
 
+    //set as equal to mage palette upon first load, in RGB space
     var colorPaletteRGBArray = [
         [0, 102, 164],
         [100, 0, 0],
@@ -266,9 +265,11 @@ Ability to save custom palette?
 
     var magePaletteArray = ["#0066A4","#640000","#006400","#FFC300","#FFFFFF","#000000"];
     var viridisPaletteArray = ["#fde725","#7ad151","#22a884","#2a788e","#414487","#440154"];
+    var analogPaletteArray = ["#d27575","#675a55","#529b9c","#9cba8f","#eac392","#FFFFFF"];
     var infernoPaletteArray = ["#fcffa4","#fca50a","#dd513a","#932667","#420a68","#000004"];
-    var vaporwavePaletteArray = ["#FF61FF","#9B26B6","#05C3DD","#1E22AA","#F0E991","#D1EFED"];
+    var vaporwavePaletteArray = ["#D336BE","#E1A5EE","#05C3DD","#1E22AA","#D1EFED","#FFFFFF"];
     var bohemianPaletteArray = ["#3F2021","#B04A5A","#BA5B3F","#CB9576","#7FA0AC","#EEE5D3"];
+    var customPaletteArray = ["#FFFFFF","#DDDDDD","#BBBBBB","#000000","#000000","#000000"];
 
     //color pickers
     var colorPicker = document.getElementById('color-picker');
@@ -285,6 +286,8 @@ Ability to save custom palette?
 
     var screenWidth = window.innerWidth; // get the width of the browser screen
     var maxImageWidth = (screenWidth*0.96) / 2; // max width for each of the two images
+    var maxImageHeight = window.innerHeight * 0.78;
+    console.log("max image dimensions: "+maxImageWidth+", "+maxImageHeight);
 
     //Save and export the new image in png format
     var saveButton = document.getElementById('save-image-button');
@@ -579,16 +582,22 @@ Ability to save custom palette?
             actualWidth = defaultImage.width;
             actualHeight = defaultImage.height;
 
-            //console.log("Default image dimensions: "+actualWidth+", "+actualHeight);
-                    
+            //adjust for max width
             if(actualWidth >= maxImageWidth){
-            scaledWidth = maxImageWidth;;
+            scaledWidth = maxImageWidth;
             } else{
             scaledWidth = Math.min(maxImageWidth,actualWidth*1.0);
             }
 
             widthScalingRatio = scaledWidth / actualWidth;
             scaledHeight = actualHeight * widthScalingRatio;
+
+            //adjust for max height
+            if(scaledHeight > maxImageHeight){
+                scaledWidth = (maxImageHeight / scaledHeight) * scaledWidth;
+                widthScalingRatio = scaledWidth / actualWidth;
+                scaledHeight = actualHeight * widthScalingRatio;
+            }
 
             newCanvas = document.createElement('canvas');
             newCtx = newCanvas.getContext('2d');
@@ -645,16 +654,23 @@ Ability to save custom palette?
           
           actualWidth = image.width;
           actualHeight = image.height;
-                    
+              
+          //adjust for max width
           if(actualWidth >= maxImageWidth){
-            scaledWidth = maxImageWidth;;
+            scaledWidth = maxImageWidth;
           } else{
             scaledWidth = Math.min(maxImageWidth,actualWidth*2);
           }
 
           widthScalingRatio = scaledWidth / actualWidth;
-
           scaledHeight = actualHeight * widthScalingRatio;
+
+        //adjust for max height
+        if(scaledHeight > maxImageHeight){
+            scaledWidth = (maxImageHeight / scaledHeight) * scaledWidth;
+            widthScalingRatio = scaledWidth / actualWidth;
+            scaledHeight = actualHeight * widthScalingRatio;
+        }
 
         var originalImg = document.createElement('img');
         originalImg.src = imageData;
@@ -1323,6 +1339,9 @@ Ability to save custom palette?
         var chosenColorG = chosenColorRGB.g; 
         var chosenColorB = chosenColorRGB.b;
         colorPaletteRGBArray[0] = [chosenColorR,chosenColorG,chosenColorB];
+        if(paletteChoice == "custom"){
+            customPaletteArray[0] = chosenColor;
+        }
 
         //picker #2
         var chosenColor2 = colorPicker2.value;
@@ -1331,6 +1350,9 @@ Ability to save custom palette?
         var chosenColorG2 = chosenColorRGB2.g; 
         var chosenColorB2 = chosenColorRGB2.b;
         colorPaletteRGBArray[1] = [chosenColorR2,chosenColorG2,chosenColorB2];
+        if(paletteChoice == "custom"){
+            customPaletteArray[1] = chosenColor2;
+        }
 
         //picker #3
         var chosenColor3 = colorPicker3.value;
@@ -1339,6 +1361,9 @@ Ability to save custom palette?
         var chosenColorG3 = chosenColorRGB3.g; 
         var chosenColorB3 = chosenColorRGB3.b;
         colorPaletteRGBArray[2] = [chosenColorR3,chosenColorG3,chosenColorB3];
+        if(paletteChoice == "custom"){
+            customPaletteArray[2] = chosenColor3;
+        }
 
         //picker #4
         var chosenColor4 = colorPicker4.value;
@@ -1347,6 +1372,9 @@ Ability to save custom palette?
         var chosenColorG4 = chosenColorRGB4.g; 
         var chosenColorB4 = chosenColorRGB4.b;
         colorPaletteRGBArray[3] = [chosenColorR4,chosenColorG4,chosenColorB4];
+        if(paletteChoice == "custom"){
+            customPaletteArray[3] = chosenColor4;
+        }
 
         //picker #5
         var chosenColor5 = colorPicker5.value;
@@ -1355,6 +1383,9 @@ Ability to save custom palette?
         var chosenColorG5 = chosenColorRGB5.g; 
         var chosenColorB5 = chosenColorRGB5.b;
         colorPaletteRGBArray[4] = [chosenColorR5,chosenColorG5,chosenColorB5];
+        if(paletteChoice == "custom"){
+            customPaletteArray[4] = chosenColor5;
+        }
 
         //picker #6
         var chosenColor6 = colorPicker6.value;
@@ -1363,9 +1394,14 @@ Ability to save custom palette?
         var chosenColorG6 = chosenColorRGB6.g; 
         var chosenColorB6 = chosenColorRGB6.b;
         colorPaletteRGBArray[5] = [chosenColorR6,chosenColorG6,chosenColorB6];
+        if(paletteChoice == "custom"){
+            customPaletteArray[5] = chosenColor6;
+        }
 
         refresh();
     }
+
+    var customPaletteCounter = 0;
 
     function changePalette(){
         
@@ -1385,7 +1421,14 @@ Ability to save custom palette?
             colorPicker4.value = viridisPaletteArray[3];
             colorPicker5.value = viridisPaletteArray[4];
             colorPicker6.value = viridisPaletteArray[5];
-        } else if(paletteChoice == "inferno"){
+        } else if(paletteChoice == "analog"){
+            colorPicker.value = analogPaletteArray[0];
+            colorPicker2.value = analogPaletteArray[1];
+            colorPicker3.value = analogPaletteArray[2];
+            colorPicker4.value = analogPaletteArray[3];
+            colorPicker5.value = analogPaletteArray[4];
+            colorPicker6.value = analogPaletteArray[5];
+        }  else if(paletteChoice == "inferno"){
             colorPicker.value = infernoPaletteArray[0];
             colorPicker2.value = infernoPaletteArray[1];
             colorPicker3.value = infernoPaletteArray[2];
@@ -1406,6 +1449,13 @@ Ability to save custom palette?
             colorPicker4.value = bohemianPaletteArray[3];
             colorPicker5.value = bohemianPaletteArray[4];
             colorPicker6.value = bohemianPaletteArray[5];
+        } else if(paletteChoice == "custom"){
+            colorPicker.value = customPaletteArray[0];
+            colorPicker2.value = customPaletteArray[1];
+            colorPicker3.value = customPaletteArray[2];
+            colorPicker4.value = customPaletteArray[3];
+            colorPicker5.value = customPaletteArray[4];
+            colorPicker6.value = customPaletteArray[5];       
         }
 
         updateColorPickers();
