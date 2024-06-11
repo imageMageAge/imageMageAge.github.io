@@ -17,8 +17,11 @@
 }
 
 #siteNameText{
-    font-size: 32px;
-    font-weight: bold;
+    font-size: 42px;
+    /*font-weight: bold;*/
+    font-family: "Tiny5", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 #siteLogo{
@@ -42,7 +45,6 @@
         max-height: 76vh;
     }
 }
-
 
 #toolDiv{
     width:100vw;
@@ -369,18 +371,6 @@ button {
     /*max-height: 65vh;
     max-width: 96vw;*/
     position: relative;
-    animation: fade 1.5s;
-  }
-
-  @keyframes fade {
-    0% {
-      opacity: 0;
-      /*transform: translateX(100%);*/
-    }
-    100% {
-      opacity: 1;
-      /*transform: translateX(0);*/
-    }
   }
   
   .carousel-item.active {
