@@ -369,17 +369,17 @@ button {
     /*max-height: 65vh;
     max-width: 96vw;*/
     position: relative;
-    animation: fade-slide 0.5s;
+    animation: fade 1.5s;
   }
 
-  @keyframes fade-slide {
+  @keyframes fade {
     0% {
       opacity: 0;
-      transform: translateX(100%);
+      /*transform: translateX(100%);*/
     }
     100% {
       opacity: 1;
-      transform: translateX(0);
+      /*transform: translateX(0);*/
     }
   }
   
@@ -404,6 +404,6 @@ button {
   }
 
   .carouselImage {
-    max-height: 74vh;
+    max-height: 75vh;
     max-width: 96vw;
   }
