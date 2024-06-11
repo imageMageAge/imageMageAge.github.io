@@ -5,7 +5,7 @@
     box-sizing: border-box;
 
     background-color: #581845;
-    padding-top: 10px;
+    padding-top: 2px;
     padding-bottom: 10px;
     text-align: center;
     color:white;
@@ -369,6 +369,18 @@ button {
     /*max-height: 65vh;
     max-width: 96vw;*/
     position: relative;
+    animation: fade-slide 0.5s;
+  }
+
+  @keyframes fade-slide {
+    0% {
+      opacity: 0;
+      transform: translateX(100%);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
   
   .carousel-item.active {

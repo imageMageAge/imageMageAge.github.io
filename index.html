@@ -1510,36 +1510,14 @@ Abstract art (check May 30 error version)
             });
         });
 
-        carouselInner.addEventListener('touchstart', (event) => {
-        const touch = event.touches[0];
-        startX = touch.clientX;
-        startY = touch.clientY;
-        });
-
-        carouselInner.addEventListener('touchmove', (event) => {
-        const touch = event.touches[0];
-        const deltaX = touch.clientX - startX;
-        const deltaY = touch.clientY - startY;
-        if (Math.abs(deltaX) > Math.abs(deltaY)) {
-            // Horizontal swipe
-            if (deltaX > 0) {
-            // Swipe right
-            currentSlide--;
-            } else {
-            // Swipe left
-            currentSlide++;
-            }
-            updateCarousel();
-        }
-        });
-
-        carouselInner.addEventListener('touchend', () => {
-        // Reset start coordinates
-        startX = null;
-        startY = null;
-        });
-
         function updateCarousel() {
+            
+            if (currentSlide < 0) {
+                currentSlide = carouselItems.length - 1;
+            } else if (currentSlide >= carouselItems.length) {
+                currentSlide = 0;
+            }
+            
             carouselItems.forEach((item, index) => {
                 item.classList.remove('active');
                 if (index === currentSlide) {
@@ -1553,13 +1531,18 @@ Abstract art (check May 30 error version)
                 dot.classList.add('active');
                 }
             });
-            
-            if (currentSlide < 0) {
-                currentSlide = carouselItems.length - 1;
-            } else if (currentSlide >= carouselItems.length) {
-                currentSlide = 0;
-            }
         }
+        
+        //Autoplay only twice
+        let iterationCount = 0;
+        let autoplayIntervalId = setInterval(() => {
+        currentSlide++;
+        updateCarousel();
+        iterationCount++;
+        if (iterationCount >= 2) {
+            clearInterval(autoplayIntervalId);
+        }
+        }, 4000); //milliseconds before slide change
 
     }
 
