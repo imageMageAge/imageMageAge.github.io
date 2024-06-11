@@ -25,9 +25,12 @@
     width: 95px;
 }
 
-#headerAnimation{
+/*
+#headerCarousel{
     max-height: 65vh;
+    max-width: 96vw;
 }
+*/
 
 /* applies when screen is wide enough */ 
 @media (min-width: 600px) {
@@ -351,3 +354,44 @@ button {
 #buyMeACoffeeButton {
     font-size: 10px;
 }
+
+/* Carousel formatting */
+.carousel {
+    position: relative;
+  }
+  
+  .carousel-inner {
+    overflow: hidden;
+  }
+  
+  .carousel-item {
+    display: none;
+    /*max-height: 65vh;
+    max-width: 96vw;*/
+    position: relative;
+  }
+  
+  .carousel-item.active {
+    display: block;
+  }
+  
+  .carousel-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #a3ede2;
+    cursor: pointer;
+    margin: 0 5px;
+    border: none;
+  }
+  
+  .carousel-dot.active {
+    background-color: #179d89;
+    border: 2px solid #6fc5f3;
+  }
+
+  .carouselImage {
+    max-height: 74vh;
+    max-width: 96vw;
+  }

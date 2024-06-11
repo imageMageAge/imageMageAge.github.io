@@ -51,7 +51,29 @@ Abstract art (check May 30 error version)
         </tr>
     </table>
 
+    <!--
     <img id="headerAnimation" src="images/headerAnimationCompress.gif">
+    -->
+
+    <div id="headerCarousel" class="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="carouselImage" src="images/headerAnimationCompress.gif" alt="Photo 1">
+          </div>
+          <div class="carousel-item">
+            <img class="carouselImage" src="images/siteOGImage2.png" alt="Photo 2">
+          </div>
+          <div class="carousel-item">
+            <img class="carouselImage" src="images/KowloonPurple.png" alt="Photo 3">
+          </div>
+
+        </div>
+        <div class="carousel-dots">
+          <button class="carousel-dot active" data-slide="0"></button>
+          <button class="carousel-dot" data-slide="1"></button>
+          <button class="carousel-dot" data-slide="2"></button>
+        </div>
+    </div>
 
     <p>Remix and reimagine your photos.</p>
 
@@ -132,6 +154,7 @@ Abstract art (check May 30 error version)
                         <option value="inferno">Inferno</option>
                         <option value="vaporwave">Vaporwave</option>
                         <option value="bohemian">Bohemian</option>
+                        <option value="earth">Earth</option>
                         <option value="custom">Custom >></option>
                     </select>
                 </td>
@@ -269,6 +292,7 @@ Abstract art (check May 30 error version)
     var infernoPaletteArray = ["#fcffa4","#fca50a","#dd513a","#932667","#420a68","#000004"];
     var vaporwavePaletteArray = ["#D336BE","#E1A5EE","#05C3DD","#1E22AA","#D1EFED","#FFFFFF"];
     var bohemianPaletteArray = ["#3F2021","#B04A5A","#BA5B3F","#CB9576","#7FA0AC","#EEE5D3"];
+    var earthPaletteArray = ["#8e412e","#ba6f4d","#e6cebc","#a2a182","#687259","#f4ece2"];
     var customPaletteArray = ["#FFFFFF","#DDDDDD","#BBBBBB","#000000","#000000","#000000"];
 
     //color pickers
@@ -372,6 +396,7 @@ Abstract art (check May 30 error version)
 
 
     //main method
+    initPhotoCarousel();
     getUserInputs();
     initColorPickers();
     showDefaultImage();
@@ -1449,6 +1474,13 @@ Abstract art (check May 30 error version)
             colorPicker4.value = bohemianPaletteArray[3];
             colorPicker5.value = bohemianPaletteArray[4];
             colorPicker6.value = bohemianPaletteArray[5];
+        } else if(paletteChoice == "earth"){
+            colorPicker.value = earthPaletteArray[0];
+            colorPicker2.value = earthPaletteArray[1];
+            colorPicker3.value = earthPaletteArray[2];
+            colorPicker4.value = earthPaletteArray[3];
+            colorPicker5.value = earthPaletteArray[4];
+            colorPicker6.value = earthPaletteArray[5];
         } else if(paletteChoice == "custom"){
             colorPicker.value = customPaletteArray[0];
             colorPicker2.value = customPaletteArray[1];
@@ -1461,6 +1493,77 @@ Abstract art (check May 30 error version)
         updateColorPickers();
 
     }
+
+    function initPhotoCarousel(){
+
+        const carousel = document.querySelector('.carousel');
+        const carouselInner = carousel.querySelector('.carousel-inner');
+        const carouselItems = carouselInner.querySelectorAll('.carousel-item');
+        const carouselDots = carousel.querySelectorAll('.carousel-dot');
+
+        let currentSlide = 0;
+
+        carouselDots.forEach((dot, index) => {
+            dot.addEventListener('click', () => {
+                currentSlide = index;
+                updateCarousel();
+            });
+        });
+
+        carouselInner.addEventListener('touchstart', (event) => {
+        const touch = event.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+        });
+
+        carouselInner.addEventListener('touchmove', (event) => {
+        const touch = event.touches[0];
+        const deltaX = touch.clientX - startX;
+        const deltaY = touch.clientY - startY;
+        if (Math.abs(deltaX) > Math.abs(deltaY)) {
+            // Horizontal swipe
+            if (deltaX > 0) {
+            // Swipe right
+            currentSlide--;
+            } else {
+            // Swipe left
+            currentSlide++;
+            }
+            updateCarousel();
+        }
+        });
+
+        carouselInner.addEventListener('touchend', () => {
+        // Reset start coordinates
+        startX = null;
+        startY = null;
+        });
+
+        function updateCarousel() {
+            carouselItems.forEach((item, index) => {
+                item.classList.remove('active');
+                if (index === currentSlide) {
+                item.classList.add('active');
+                }
+            });
+
+            carouselDots.forEach((dot, index) => {
+                dot.classList.remove('active');
+                if (index === currentSlide) {
+                dot.classList.add('active');
+                }
+            });
+            
+            if (currentSlide < 0) {
+                currentSlide = carouselItems.length - 1;
+            } else if (currentSlide >= carouselItems.length) {
+                currentSlide = 0;
+            }
+        }
+
+    }
+
+
 
   </script>
 </body>
