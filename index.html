@@ -1,12 +1,12 @@
 <!--
 To dos:
 --Basic Functionality--
-Turn header image into a carousel with ~3 animations / photo
 Mobile formatting -- below a certain screen width, have the two images above/below rather than side-by-side
 Export button which gives both two images collated together  
 Write short bio for each template at the bottom, to help users understand what's happening with the input-output?
 
 --New Visual Ideas--
+For palettize, add a palette which works well with skin tones (skin colors + colors that are very different for the background?)
 Pixel art (use larger pixel squares, take the average colour value from the original image)
 Abstract art (check May 30 error version)
 -->
@@ -26,7 +26,7 @@ Abstract art (check May 30 error version)
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
     <meta property="og:title" content="Image Mage" />
-    <meta property="og:description" content="Free web tool for remixing and reimagining your photos" />
+    <meta property="og:description" content="Turn photos into comic book art, abstract paintings, pixel art, and more." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://imagemageage.github.io/" />
     <meta property="og:image" content="https://imagemageage.github.io/images/siteOGImage2.png">
@@ -79,7 +79,7 @@ Abstract art (check May 30 error version)
         </div>
     </div>
 
-    <p>Remix and reimagine your photos.</p>
+    <p>Remix and rediscover your photos. Turn photos into comic book art, abstract paintings, pixel art, and more.</p>
 
 </div>
 
@@ -106,6 +106,7 @@ Abstract art (check May 30 error version)
                         <option value="sketch">Sketch</option>
                         <option value="roller">Roller</option>
                         <option value="palletize">Palletize</option>
+.                        <option value="pixel">Pixel Art</option>
                     </select>
 
                     <!--
@@ -228,8 +229,9 @@ Abstract art (check May 30 error version)
             <li>The gif at the top of the page was created by taking 10 different variations of a photo using higher/lower sensitivity values (the r / s hotkeys make this pretty speedy to do!)</li>
             <li>The GIF animation was then created using the Gif Maker tool provided by <a href="https://ezgif.com/maker" rel="noopener" target="_blank">Ezgif</a></li>
         </ul>
-        <p>This project is coded using Javascript, HTML, and CSS (see github repo linked below). I do not have access to any of the images that you upload here, as all processing is done "client-side" (i.e., on your own computer).</p>
+        <p>This project is coded using Javascript, HTML, and CSS (see github repo linked below). I do not have access to any of the images that you upload here, as all processing is done "client-side" (i.e., no images are saved or stored by me -- they stay on your computer only).</p>
         <p>I'm working on some new visual styles which I hope to add soon. Let me know if you have ideas 💡</p>
+        <p>Feel free to reach out to discuss, ask questions, or to share some of your creations! You can find my instagram and email accounts through the buttons below.</p>
     </div>
 </div>
 
@@ -239,6 +241,7 @@ Abstract art (check May 30 error version)
             <td><button id="gitHubButton"class="socialMediaButton"><a href="https://github.com/imageMageAge/imageMageAge.github.io" target="blank" rel="noopener"><i class="fa-brands fa-github"></i></a></button></td>
             <td><button id="coffeeButton" class="socialMediaButton"><a href="https://www.buymeacoffee.com/stereoDrift" target="blank" rel="noopener"><i class="fa-solid fa-heart"></i></a></button></td>
             <td><button id="instagramButton" class="socialMediaButton"><a href="https://www.instagram.com/stereo.drift/" target="blank" rel="noopener"><i class="fa-brands fa-instagram"></i></a></button></td>
+            <td><button id="emailButton" class="socialMediaButton"><a href="mailto:stereodriftvisuals@gmail.com" target="blank" rel="noopener"><i class="fa-solid fa-envelope"></i></a></button></td>
         </tr>
     </table>
 </div>
@@ -596,13 +599,54 @@ Abstract art (check May 30 error version)
                 element.classList.remove('hidden');
             });
 
+        } else if(visualizationChoice == "pixel"){
+
+            var elements = document.querySelectorAll('.inputCol1');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol2');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol3');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol4');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol5');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol6');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol7');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol8');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
         }
         
     }
 
     function showDefaultImage() {
         
-        //var defaultImage = defaultImageContainer.querySelector('img');
         var defaultImage = new Image();
         defaultImage.src = 'images/HK2024.jpg';
 
@@ -1131,6 +1175,47 @@ Abstract art (check May 30 error version)
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), 1, 1);
             }
 
+        } else if(visualizationChoice == "pixel"){
+            console.log("running pixel visual");
+
+            var newPixelSize = Math.floor(Math.max(1,noiseProbability)); //width and height of new pixel square
+            var numRows = actualHeight / newPixelSize;
+            var numCols = actualWidth / newPixelSize;
+
+            var alpha = 1;
+
+            for(var cellY=0; cellY < Math.ceil(numRows); cellY++ ){
+                for(var cellX=0; cellX < Math.ceil(numCols); cellX++ ){
+
+                    var cellPixels = [];
+
+                    for(var pixelY=0; pixelY<newPixelSize; pixelY++){
+                        
+                        for(var pixelX=0; pixelX<newPixelSize; pixelX++){
+
+                            var currentXPosition = cellX*newPixelSize + pixelX;
+                            var currentYPosition = cellY*newPixelSize + pixelY;
+
+                            var currentPixelDataValue = (currentYPosition * actualWidth + currentXPosition) * 4;
+
+                            if(currentXPosition < actualWidth && currentYPosition < actualHeight){
+                                cellPixels.push(pixels[currentPixelDataValue]);
+                                cellPixels.push(pixels[currentPixelDataValue + 1]);
+                                cellPixels.push(pixels[currentPixelDataValue + 2]);
+                                cellPixels.push(pixels[currentPixelDataValue + 3]);
+                            }
+
+                        }
+                    }
+
+                    var avgColor = getAverageColor(cellPixels);
+                    newCtx.fillStyle = `rgba(${avgColor[0]}, ${avgColor[1]}, ${avgColor[2]}, ${alpha})`;
+                    newCtx.fillRect(cellX*newPixelSize, cellY*newPixelSize, newPixelSize, newPixelSize);
+
+                }
+
+            }
+
         }
 
         const newImageData = newCanvas.toDataURL();
@@ -1159,6 +1244,19 @@ Abstract art (check May 30 error version)
         } else {
             return null;
         }
+    }
+
+    function getAverageColor(chosenPixels) {
+        var r = 0;
+        var g = 0;
+        var b = 0;
+        var count = chosenPixels.length / 4;
+        for (let i = 0; i < count; i++) {
+            r += chosenPixels[i * 4];
+            g += chosenPixels[i * 4 + 1];
+            b += chosenPixels[i * 4 + 2];
+        }
+        return [r / count, g / count, b / count];
     }
 
     function resizeTable(){
