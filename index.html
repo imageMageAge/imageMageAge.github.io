@@ -97,6 +97,7 @@ Abstract art (check May 30 error version)
                 <th class="inputCol6">Max Dot Size</th>
                 <th class="inputCol7">Palette</th>
                 <th class="inputCol8">Colors</th>
+                <th class="inputCol9">Background</th>
             </tr>
 
             <tr>
@@ -107,6 +108,7 @@ Abstract art (check May 30 error version)
                         <option value="roller">Roller</option>
                         <option value="palletize">Palletize</option>
 .                        <option value="pixel">Pixel Art</option>
+.                        <option value="clippings">Clippings</option>
                     </select>
 
                     <!--
@@ -171,6 +173,10 @@ Abstract art (check May 30 error version)
                     <input type="color" class="colorInput" id="color-picker4" value="#FFC300">
                     <input type="color" class="colorInput" id="color-picker5" value="#FFFFFF">
                     <input type="color" class="colorInput" id="color-picker6" value="#000000">
+                </td>
+
+                <td class="inputCol9">
+                    <input type="color" class="colorInput" id="backgroundColorInput" value="#FFBB00">
                 </td>
             </tr>
 
@@ -311,6 +317,7 @@ Abstract art (check May 30 error version)
     var colorPicker4 = document.getElementById('color-picker4');
     var colorPicker5 = document.getElementById('color-picker5');
     var colorPicker6 = document.getElementById('color-picker6');
+    var backgroundColorInput = document.getElementById('backgroundColorInput');
 
     var isImageLoaded = false;
     
@@ -354,6 +361,8 @@ Abstract art (check May 30 error version)
     var scaledWidth;
     var scaledHeight;
     var widthScalingRatio;
+
+    var backgroundColor = backgroundColorInput.value;
 
     var newCanvas = document.createElement('canvas');
     var newCtx = newCanvas.getContext('2d');
@@ -428,6 +437,8 @@ Abstract art (check May 30 error version)
 
         rgbColorRange = noiseColorRange/100 * 255;
 
+        backgroundColor = backgroundColorInput.value;
+
         toggleInputMenu();
     }
 
@@ -471,6 +482,11 @@ Abstract art (check May 30 error version)
             });
 
             var elements = document.querySelectorAll('.inputCol8');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol9');
             elements.forEach(element => {
                 element.classList.add('hidden');
             });
@@ -559,6 +575,11 @@ Abstract art (check May 30 error version)
                 element.classList.add('hidden');
             });
 
+            var elements = document.querySelectorAll('.inputCol9');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
         }  else if(visualizationChoice == "palletize"){
 
             var elements = document.querySelectorAll('.inputCol1');
@@ -601,6 +622,11 @@ Abstract art (check May 30 error version)
                 element.classList.remove('hidden');
             });
 
+            var elements = document.querySelectorAll('.inputCol9');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
         } else if(visualizationChoice == "pixel"){
 
             var elements = document.querySelectorAll('.inputCol1');
@@ -641,6 +667,58 @@ Abstract art (check May 30 error version)
             var elements = document.querySelectorAll('.inputCol8');
             elements.forEach(element => {
                 element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol9');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+        } else if(visualizationChoice == "clippings"){
+
+            var elements = document.querySelectorAll('.inputCol1');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol2');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol3');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol4');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol5');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol6');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol7');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol8');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol9');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
             });
 
         }
@@ -794,15 +872,16 @@ Abstract art (check May 30 error version)
             return; // exit the function if isImageLoaded is false
         }
 
-        // Create a new image using the pixel colors
+        // Create a new image
         newCanvas = document.createElement('canvas');
         newCtx = newCanvas.getContext('2d');
 
         newCanvas.width = actualWidth;
         newCanvas.height = actualHeight;
 
-        newCtx.fillStyle = '#FFFFFF'; // Set background color to white
-        newCtx.fillRect(0, 0, actualWidth, actualHeight); // Fill the background
+        //set background color of new canvas
+        newCtx.fillStyle = backgroundColor;
+        newCtx.fillRect(0, 0, actualWidth, actualHeight);
 
         console.log("actual width: "+actualWidth);
         console.log("actual height: "+actualHeight);
@@ -1218,6 +1297,40 @@ Abstract art (check May 30 error version)
 
             }
 
+        } else if(visualizationChoice == "clippings"){
+            console.log("running pixel visual");
+
+            var minClips = 4;
+            var maxClips = 25;
+            var clipsRange = maxClips - minClips;
+            var numClips = Math.ceil(minClips + (noiseProbability/100)*clipsRange);
+            var alpha = 1;
+
+            for(var windowCounter=0; windowCounter < numClips; windowCounter++){
+                var startX = Math.floor(Math.random() * actualWidth);
+                var startY = Math.floor(Math.random() * actualHeight);
+                var windowWidth = Math.floor(Math.random() * actualWidth*0.5);
+                var windowHeight = Math.floor(Math.random() * actualHeight*0.5);
+                var numPixels = windowWidth * windowHeight;
+
+                for(var row=0; row<windowHeight; row++){
+                    for(var col=0; col<windowWidth; col++){
+                        var currentXPosition = startX + col;
+                        var currentYPosition = startY + row;
+                        var currentPixelDataValue = (currentYPosition*actualWidth + currentXPosition) * 4;
+
+                        var red = pixels[currentPixelDataValue];
+                        var green = pixels[currentPixelDataValue+1];
+                        var blue = pixels[currentPixelDataValue+2];
+                        
+                        newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+                        newCtx.fillRect(currentXPosition, currentYPosition, 1, 1);
+                    }
+
+                }
+
+            }
+
         }
 
         const newImageData = newCanvas.toDataURL();
@@ -1457,6 +1570,10 @@ Abstract art (check May 30 error version)
         colorPicker6.addEventListener('change', (e) => {
             updateColorPickers();
         });
+
+        backgroundColorInput.addEventListener('change', (e) => {
+            refresh();
+        });    
     }
 
     function updateColorPickers(){
@@ -1649,8 +1766,6 @@ Abstract art (check May 30 error version)
         }, 4000); //milliseconds before slide change
 
     }
-
-
 
   </script>
 </body>
