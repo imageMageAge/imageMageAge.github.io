@@ -7,7 +7,7 @@ Write short bio for each template at the bottom, to help users understand what's
 
 --New Visual Ideas--
 For palettize, add a palette which works well with skin tones (skin colors + colors that are very different for the background?)
-Pixel art (use larger pixel squares, take the average colour value from the original image)
+Kandinsky abstract art (overlay objects on top of photo? Something else?)
 Abstract art (check May 30 error version)
 -->
 
@@ -437,7 +437,11 @@ Abstract art (check May 30 error version)
 
         rgbColorRange = noiseColorRange/100 * 255;
 
-        backgroundColor = backgroundColorInput.value;
+        if(visualizationChoice == "sketch"){
+            backgroundColor = "#FFFFFF";
+        } else {
+            backgroundColor = backgroundColorInput.value;
+        }
 
         toggleInputMenu();
     }
@@ -529,6 +533,11 @@ Abstract art (check May 30 error version)
             });
 
             var elements = document.querySelectorAll('.inputCol8');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol9');
             elements.forEach(element => {
                 element.classList.add('hidden');
             });
