@@ -73,6 +73,16 @@
     max-width: 75vw;
 }
 
+li {
+    margin-bottom: 6px;
+
+    /*
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    line-height: 1.5;
+    */
+}
+
 #linksDiv{
     background-color: #faebf6;
     display: flex;
@@ -399,3 +409,25 @@ button {
     max-height: 75vh;
     max-width: 96vw;
   }
+
+/* Pop-up styling */
+.popup {
+    background-color: #fff;
+    padding: 5px;
+    border: 3px solid #601785;
+    display: none; /* hide by default */
+    visibility: visible;
+    position: fixed;
+    z-index: 999;
+    max-width: 200px;
+    max-height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+#closeIcon{
+    font-size:30px;
+    cursor: pointer;
+}

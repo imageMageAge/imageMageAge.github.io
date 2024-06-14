@@ -1,12 +1,14 @@
 <!--
 To dos:
 --Basic Functionality--
+Re-factor code (simplify changeColorPalette and toggleMenuInput functions), split into separate js file
 Mobile formatting -- below a certain screen width, have the two images above/below rather than side-by-side
 Export button which gives both two images collated together  
 Write short bio for each template at the bottom, to help users understand what's happening with the input-output?
 
 --New Visual Ideas--
 For palettize, add a palette which works well with skin tones (skin colors + colors that are very different for the background?)
+Soft focus / gaussian blur / halo effect
 Kandinsky abstract art (overlay objects on top of photo? Something else?)
 Abstract art (check May 30 error version)
 -->
@@ -45,6 +47,11 @@ Abstract art (check May 30 error version)
 <body>
 
 <div id="coverScreen" class="hidden">
+</div>
+
+<div class="popup">
+    <p>Click on the source image (left-side) to draw grid lines</p>
+    <i id="closeIcon" class="fa-solid fa-circle-xmark"></i>
 </div>
 
 <div id="introDiv">
@@ -109,6 +116,7 @@ Abstract art (check May 30 error version)
                         <option value="palletize">Palletize</option>
 .                        <option value="pixel">Pixel Art</option>
 .                        <option value="clippings">Clippings</option>
+.                        <option value="grid">Grid</option>
                     </select>
 
                     <!--
@@ -176,7 +184,7 @@ Abstract art (check May 30 error version)
                 </td>
 
                 <td class="inputCol9">
-                    <input type="color" class="colorInput" id="backgroundColorInput" value="#FFBB00">
+                    <input type="color" class="colorInput" id="backgroundColorInput" value="#FFF9EB">
                 </td>
             </tr>
 
@@ -234,6 +242,7 @@ Abstract art (check May 30 error version)
         <ul>
             <li>Press <b>"r"</b> to re-generate a new image. Some visual styles (such as Roller and Pointilist) have randomness built-in, so this gives you a fresh image</li>
             <li>Press <b>"s"</b> to save an image</li>
+            <li>You can generate some neat effects by "stacking" the visual styles. Try running "Palettize" on your source image, saving the output, then loading that image as a source file. After, run the "Pointillist visual. This combines two manipulation effects into one image</li>
             <li>The gif at the top of the page was created by taking 10 different variations of a photo using higher/lower sensitivity values (the r / s hotkeys make this pretty speedy to do!)</li>
             <li>The GIF animation was then created using the Gif Maker tool provided by <a href="https://ezgif.com/maker" rel="noopener" target="_blank">Ezgif</a></li>
         </ul>
@@ -291,6 +300,11 @@ Abstract art (check May 30 error version)
     var paletteChoiceInput = document.getElementById('paletteChoice');
     var paletteChoice = paletteChoiceInput.value;
 
+    var originalImage;
+
+    var clickXPosition;
+    var clickYPosition;
+
     //set as equal to mage palette upon first load, in RGB space
     var colorPaletteRGBArray = [
         [0, 102, 164],
@@ -328,6 +342,16 @@ Abstract art (check May 30 error version)
     var maxImageWidth = (screenWidth*0.96) / 2; // max width for each of the two images
     var maxImageHeight = window.innerHeight * 0.78;
     console.log("max image dimensions: "+maxImageWidth+", "+maxImageHeight);
+
+    //Pop-up for grid visual style
+    var popup = document.querySelector('.popup');
+
+    // hide the popup when the user clicks on the image
+    popup.addEventListener('click', () => {
+        popup.style.display = 'none';
+    });
+
+    var gridLoadCounter = 0;
 
     //Save and export the new image in png format
     var saveButton = document.getElementById('save-image-button');
@@ -730,6 +754,53 @@ Abstract art (check May 30 error version)
                 element.classList.remove('hidden');
             });
 
+        } else if(visualizationChoice == "grid"){
+
+            var elements = document.querySelectorAll('.inputCol1');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol2');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol3');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol4');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol5');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol6');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol7');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol8');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol9');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
         }
         
     }
@@ -788,8 +859,20 @@ Abstract art (check May 30 error version)
                 //console.log(pixels);
                 isImageLoaded = true;
                 drawNewImage();
+
+                img.addEventListener('click', (e) => {
+                    clickXPosition = e.offsetX / widthScalingRatio;
+                    clickYPosition = e.offsetY / widthScalingRatio;
+                    console.log(`Clicked at (${clickXPosition}, ${clickXPosition})`);
+                    if(visualizationChoice=="grid"){
+                        drawNewImage();
+                    }
+                });
+
                 window.scrollTo(0, 0);
             }
+
+
 
         }
     }
@@ -814,42 +897,52 @@ Abstract art (check May 30 error version)
         image.src = imageData;
         image.onload = () => {
           
-          actualWidth = image.width;
-          actualHeight = image.height;
-              
-          //adjust for max width
-          if(actualWidth >= maxImageWidth){
-            scaledWidth = maxImageWidth;
-          } else{
-            scaledWidth = Math.min(maxImageWidth,actualWidth*2);
-          }
+            actualWidth = image.width;
+            actualHeight = image.height;
+                
+            //adjust for max width
+            if(actualWidth >= maxImageWidth){
+                scaledWidth = maxImageWidth;
+            } else{
+                scaledWidth = Math.min(maxImageWidth,actualWidth*2);
+            }
 
-          widthScalingRatio = scaledWidth / actualWidth;
-          scaledHeight = actualHeight * widthScalingRatio;
-
-        //adjust for max height
-        if(scaledHeight > maxImageHeight){
-            scaledWidth = (maxImageHeight / scaledHeight) * scaledWidth;
             widthScalingRatio = scaledWidth / actualWidth;
             scaledHeight = actualHeight * widthScalingRatio;
-        }
 
-        var originalImg = document.createElement('img');
-        originalImg.src = imageData;
-        originalImg.width = scaledWidth;
-        originalImg.height = scaledHeight;
-        imageContainer.appendChild(originalImg);
+            //adjust for max height
+            if(scaledHeight > maxImageHeight){
+                scaledWidth = (maxImageHeight / scaledHeight) * scaledWidth;
+                widthScalingRatio = scaledWidth / actualWidth;
+                scaledHeight = actualHeight * widthScalingRatio;
+            }
 
-          // Get the pixel colors
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          canvas.width = actualWidth;
-          canvas.height = actualHeight;
-          ctx.drawImage(image, 0, 0);
-          pixelData = ctx.getImageData(0, 0, actualWidth, actualHeight);
-          pixels = pixelData.data;
+            var originalImg = document.createElement('img');
+            originalImg.src = imageData;
+            originalImg.width = scaledWidth;
+            originalImg.height = scaledHeight;
+            imageContainer.appendChild(originalImg);
 
-          refresh();
+            // Get the pixel colors
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = actualWidth;
+            canvas.height = actualHeight;
+            ctx.drawImage(image, 0, 0);
+            pixelData = ctx.getImageData(0, 0, actualWidth, actualHeight);
+            pixels = pixelData.data;
+
+            //add click position event listener
+            originalImg.addEventListener('click', (e) => {
+                clickXPosition = e.offsetX / widthScalingRatio;
+                clickYPosition = e.offsetY / widthScalingRatio;
+                console.log(`Clicked at (${clickXPosition}, ${clickXPosition})`);
+                if(visualizationChoice=="grid"){
+                    drawNewImage();
+                }
+            });
+
+            refresh();
 
         };
       };
@@ -880,6 +973,8 @@ Abstract art (check May 30 error version)
             loadingScreen.classList.add("hidden");
             return; // exit the function if isImageLoaded is false
         }
+
+        originalImage = imageContainer.querySelector('img');
 
         // Create a new image
         newCanvas = document.createElement('canvas');
@@ -934,7 +1029,6 @@ Abstract art (check May 30 error version)
             console.log("running roller visual");
 
             //faithful reproduction
-            var originalImage = imageContainer.querySelector('img');
             newCtx.drawImage(originalImage, 0, 0);
 
             //smear effect
@@ -1340,8 +1434,91 @@ Abstract art (check May 30 error version)
 
             }
 
-        }
+        } else if(visualizationChoice == "grid"){
+            console.log("run grid visual");
+            if(gridLoadCounter == 0){
+                // show the popup
+                popup.style.display = 'block';
+            }
+            gridLoadCounter++;
 
+            //faithful reproduction
+            newCtx.drawImage(originalImage, 0, 0);
+
+            var numHorizontalLines = 6 * ((noiseProbability/100)+0.5);
+            var startingHeight = clickYPosition;
+            var endingHeight = actualHeight;
+            var heightRange = endingHeight - startingHeight;
+            var strokeWidth = actualWidth / 100 / 2;
+            var strokeColor = "#D336BE";
+            var strokeColor2 = "#05C3DD";
+            var alpha = 0.8;
+
+            var numAngleLines = 8 * ((noiseProbability/100)+0.5);
+            var xSpacing = actualWidth / (numAngleLines+1)
+
+            for(var i=0; i<numAngleLines; i++){
+
+                var startingXPosition = (i+1) * xSpacing;
+                //var distanceFromCenter = (startingXPosition - actualWidth/2) / (actualWidth/2);
+                var slope = (startingXPosition - clickXPosition) / clickXPosition;
+                var lineYShift = heightRange;
+                var lineXShift = lineYShift * slope;
+
+                //draw vertical lines
+                newCtx.beginPath();
+                newCtx.moveTo(startingXPosition, startingHeight); // starting point
+                newCtx.lineTo(startingXPosition, 0); // ending point
+                newCtx.strokeStyle = strokeColor2;
+                newCtx.lineWidth = strokeWidth;
+                newCtx.globalAlpha = alpha/2;
+                newCtx.stroke();
+
+                //draw angle lines
+                newCtx.beginPath();
+                newCtx.moveTo(startingXPosition, startingHeight); // starting point
+                newCtx.lineTo(startingXPosition+lineXShift, endingHeight); // ending point
+                newCtx.strokeStyle = strokeColor;
+                newCtx.lineWidth = strokeWidth;
+                newCtx.globalAlpha = alpha;
+                newCtx.stroke();
+
+            }
+
+            //draw top horizontal lines
+            var numTopHorizontalLines = 6 * ((noiseProbability/100)+0.5);
+            var topSpacing = startingHeight / numTopHorizontalLines;
+
+            for(var i=0; i<numTopHorizontalLines; i++){
+                newCtx.beginPath();
+                newCtx.moveTo(0, i*topSpacing); // starting point
+                newCtx.lineTo(actualWidth, i*topSpacing); // ending point
+                newCtx.strokeStyle = strokeColor2;
+                newCtx.lineWidth = strokeWidth;
+                newCtx.globalAlpha = alpha/2;
+                newCtx.stroke();
+            }
+
+            //draw horizontal lines
+            for(var i=0; i<numHorizontalLines; i++){
+                
+                var currentHeight = startingHeight + heightRange * Math.pow(i/(numHorizontalLines-1),1.5);
+                //console.log(currentHeight);
+                newCtx.beginPath();
+                newCtx.moveTo(0, currentHeight); // starting point
+                newCtx.lineTo(actualWidth, currentHeight); // ending point
+                newCtx.strokeStyle = strokeColor;
+                if(i==0){
+                    newCtx.lineWidth = strokeWidth*2;
+                } else{
+                    newCtx.lineWidth = strokeWidth;
+                }
+                newCtx.globalAlpha = alpha;
+                newCtx.stroke();
+            }            
+
+        }
+    
         const newImageData = newCanvas.toDataURL();
         const newImage = new Image();
         newImage.src = newImageData;
