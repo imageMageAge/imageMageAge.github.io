@@ -117,6 +117,7 @@ Abstract art (check May 30 error version)
 .                        <option value="pixel">Pixel Art</option>
 .                        <option value="clippings">Clippings</option>
 .                        <option value="grid">Grid</option>
+.                        <option value="mondrian">Mondrian</option>
                     </select>
 
                     <!--
@@ -755,6 +756,53 @@ Abstract art (check May 30 error version)
             });
 
         } else if(visualizationChoice == "grid"){
+
+            var elements = document.querySelectorAll('.inputCol1');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol2');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol3');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol4');
+            elements.forEach(element => {
+                element.classList.remove('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol5');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol6');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol7');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol8');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+            var elements = document.querySelectorAll('.inputCol9');
+            elements.forEach(element => {
+                element.classList.add('hidden');
+            });
+
+        }  else if(visualizationChoice == "mondrian"){
 
             var elements = document.querySelectorAll('.inputCol1');
             elements.forEach(element => {
@@ -1517,6 +1565,25 @@ Abstract art (check May 30 error version)
                 newCtx.stroke();
             }            
 
+        } else if(visualizationChoice == "mondrian"){
+            
+
+            //draw Mondrian grid
+            newCtx.beginPath();
+            newCtx.lineWidth = 0;
+
+            var xPad = Math.floor(actualWidth * 0.1);
+            var yPad = Math.floor(actualHeight * 0.1);
+
+            var initialRect = new Rectangle(new Point(0, 0), new Point(actualWidth, actualHeight));
+            initialRect.split(xPad, yPad, 0, 4, newCtx);
+
+            newCtx.stroke();
+
+            //faithful reproduction
+            newCtx.globalAlpha = Math.min(1,Math.max(0,1-(noiseProbability/100)));
+            newCtx.drawImage(originalImage, 0, 0);
+
         }
     
         const newImageData = newCanvas.toDataURL();
@@ -1952,6 +2019,90 @@ Abstract art (check May 30 error version)
         }, 4000); //milliseconds before slide change
 
     }
+
+    // Mondrian object and functions
+
+    function randInt (min, max) {
+        return Math.floor(Math.random() * (max - min) + min)
+    }
+
+    class Point {
+        constructor (x, y) {
+            this.x = x
+            this.y = y
+        }
+    }
+
+    /*
+    var colors = [
+        'white',
+        'white',
+        'black',
+        'red',
+        'blue',
+        'yellow'
+    ]
+    */
+    var colors = vaporwavePaletteArray;
+
+    class Rectangle {
+        constructor (min, max) {
+            this.min = min
+            this.max = max
+        }
+
+        get width () {
+            return this.max.x - this.min.x
+        }
+
+        get height () {
+            return this.max.y - this.min.y
+        }
+
+        draw (ctx) {
+            // Draw clockwise
+            ctx.moveTo(this.min.x, this.min.y)
+            ctx.lineTo(this.max.x, this.min.y)
+            ctx.lineTo(this.max.x, this.max.y)
+            ctx.lineTo(this.min.x, this.max.y)
+            ctx.lineTo(this.min.x, this.min.y)
+        }
+
+        split (xPad, yPad, depth, limit, ctx) {
+            ctx.fillStyle = colors[randInt(0, colors.length)]
+            ctx.fillRect(this.min.x, this.min.y, this.max.x, this.max.y)
+            this.draw(ctx)
+
+            // Check the level of recursion
+            if (depth === limit) {
+            return
+            }
+
+            // Check the rectangle is enough large and tall
+            if (this.width < 2 * xPad || this.height < 2 * yPad) {
+            return
+            }
+
+            // If the rectangle is wider than it's height do a left/right split
+            var r1 = new Rectangle()
+            var r2 = new Rectangle()
+            if (this.width > this.height) {
+            var x = randInt(this.min.x + xPad, this.max.x - xPad)
+            r1 = new Rectangle(this.min, new Point(x, this.max.y))
+            r2 = new Rectangle(new Point(x, this.min.y), this.max)
+            // Else do a top/bottom split
+            } else {
+            var y = randInt(this.min.y + yPad, this.max.y - yPad)
+            r1 = new Rectangle(this.min, new Point(this.max.x, y))
+            r2 = new Rectangle(new Point(this.min.x, y), this.max)
+            }
+
+            // Split the sub-rectangles
+            r1.split(xPad, yPad, depth + 1, limit, ctx)
+            r2.split(xPad, yPad, depth + 1, limit, ctx)
+        }
+    }
+
 
   </script>
 </body>
