@@ -99,6 +99,7 @@ li {
     font-size:0.95em;
     text-align: center;
     min-width: 280px;
+    width:100vw;
     max-width: 500px;
     margin-top: 10px;
     margin-bottom: 10px;
@@ -231,7 +232,7 @@ input:hover{
 
 .inputCol8{
     min-width:75px;
-    max-width:250px;
+    max-width:150px;
 }
 
 
