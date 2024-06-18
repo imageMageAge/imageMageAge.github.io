@@ -181,7 +181,7 @@ input.input-number-noSpinners {
     border:1px solid rgb(180, 180, 180);
     padding: 6px;
     text-align: center;
-
+    max-width: 30vw;
 }
 
 input.input-number-noSpinners::-webkit-inner-spin-button,
@@ -230,38 +230,10 @@ input:hover{
 }
 
 .inputCol8{
-    max-width:200px;
+    min-width:150px;
+    max-width:250px;
 }
 
-/*
-
-#loadingScreen {
-    width: 100vw;
-    text-align: center;
-    background-color: #ffffff;
-    color: #0e4e43;
-    position: absolute; 
-    left: 0; 
-    top: 0;
-    z-index: 1;
-    font-size: 18px;
-    font-weight: bold;
-    margin: 0;
-}
-
-#loadingText, #loadingAnimation {
-    display: inline-block;
-}
-
-#loadingText {
-    height: 100%;
-}
-
-#loadingText td {
-    border: 1px solid black;
-    vertical-align: middle;
-}
-*/
 
 .lockOn {
     display: block;
@@ -273,7 +245,7 @@ input:hover{
     width: 100vw;
     height: 100vh;
     background-color: rgba(255, 255, 255, 0.25);
-    padding-top: 20%; 
+    padding-top: 10%; 
     opacity: 0.9; 
     font-size:large;
     color:blue;
