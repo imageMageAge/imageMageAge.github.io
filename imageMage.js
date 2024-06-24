@@ -112,6 +112,7 @@ popup.addEventListener('click', () => {
 });
 
 var gridLoadCounter = 0;
+var ringsLoadCounter = 0;
 
 //Save and export the new image in png format
 var saveButton = document.getElementById('save-image-button');
@@ -898,8 +899,6 @@ function drawNewImage(){
         }            
 
     } else if(visualizationChoice == "mondrian"){
-        
-
         //draw Mondrian grid
         newCtx.beginPath();
         newCtx.lineWidth = 0;
@@ -918,6 +917,13 @@ function drawNewImage(){
 
     } else if(visualizationChoice == "rings"){
         console.log("running rings visual");
+
+        console.log("run grid visual");
+        if(ringsLoadCounter == 0){
+            // show the popup
+            popup.style.display = 'block';
+        }
+        ringsLoadCounter++;
 
         var minPointRadius = 1;
         var maxPointRadius = Math.round(actualWidth/150) * (dotSizeFactor/100 + 0.5);
