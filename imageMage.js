@@ -29,6 +29,33 @@ var rgbColorRange = noiseColorRange/100 * 255;
 var dotSizeFactorInput = document.getElementById('dotSizeFactor');
 var dotSizeFactor = dotSizeFactorInput.value;
 
+var isImageLoaded = false;
+
+var redrawButton = document.getElementById('generate-button');
+redrawButton.addEventListener('click', refresh);
+
+var actualWidth;
+var actualHeight;
+var scaledWidth;
+var scaledHeight;
+var widthScalingRatio;
+
+var newCanvas = document.createElement('canvas');
+var newCtx = newCanvas.getContext('2d');
+
+var pixelData;
+var pixels;
+
+var redShift = redInput.value;
+var greenShift = greenInput.value;
+var blueShift = blueInput.value;
+var alphaShift = alphaInput.value;
+
+var screenWidth = window.innerWidth; // get the width of the browser screen
+var maxImageWidth = (screenWidth*0.96) / 2; // max width for each of the two images
+var maxImageHeight = window.innerHeight * 0.78;
+console.log("max image dimensions: "+maxImageWidth+", "+maxImageHeight);
+
 //color pickers
 var paletteChoiceInput = document.getElementById('paletteChoice');
 var colorPicker = document.getElementById('color-picker');
@@ -40,6 +67,7 @@ var colorPicker6 = document.getElementById('color-picker6');
 var pickers = [colorPicker, colorPicker2, colorPicker3, colorPicker4, colorPicker5, colorPicker6];
 
 var backgroundColorInput = document.getElementById('backgroundColorInput');
+var backgroundColor = backgroundColorInput.value;
 
 var palettePresets = [
     {name: "mage", displayName: "Mage", palette: ["#0066A4","#640000","#006400","#FFC300","#FFFFFF","#000000"]},
@@ -75,16 +103,6 @@ palettePresets.forEach((preset) => {
 
 var paletteChoice = paletteChoiceInput.value;
 
-var isImageLoaded = false;
-
-var redrawButton = document.getElementById('generate-button');
-redrawButton.addEventListener('click', refresh);
-
-var screenWidth = window.innerWidth; // get the width of the browser screen
-var maxImageWidth = (screenWidth*0.96) / 2; // max width for each of the two images
-var maxImageHeight = window.innerHeight * 0.78;
-console.log("max image dimensions: "+maxImageWidth+", "+maxImageHeight);
-
 //Pop-up for grid visual style
 var popup = document.querySelector('.popup');
 
@@ -102,25 +120,6 @@ saveButton.addEventListener('click', () => {
     saveImage();
 });
 
-var actualWidth;
-var actualHeight;
-var scaledWidth;
-var scaledHeight;
-var widthScalingRatio;
-
-var backgroundColor = backgroundColorInput.value;
-
-var newCanvas = document.createElement('canvas');
-var newCtx = newCanvas.getContext('2d');
-
-var pixelData;
-var pixels;
-
-var redShift = redInput.value;
-var greenShift = greenInput.value;
-var blueShift = blueInput.value;
-var alphaShift = alphaInput.value;
-
 
 // Add event listeners to the input boxes
 imageInput.addEventListener('change', readSourceImage);
@@ -137,7 +136,6 @@ noiseColorRangeInput.addEventListener('change', refresh);
 dotSizeFactorInput.addEventListener('change', refresh);
 
 paletteChoiceInput.addEventListener('change', changePalette);
-
 
 //main method
 initPhotoCarousel();
@@ -187,6 +185,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,0,0,1], name: "clippings"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "grid"},
         {menuOptions: [1,0,0,1,0,0,1,1,0], name: "mondrian"},
+        {menuOptions: [1,0,0,1,0,1,0,0,1], name: "rings"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -263,7 +262,7 @@ function showDefaultImage() {
                 clickXPosition = e.offsetX / widthScalingRatio;
                 clickYPosition = e.offsetY / widthScalingRatio;
                 console.log(`Clicked at (${clickXPosition}, ${clickXPosition})`);
-                if(visualizationChoice=="grid"){
+                if(visualizationChoice=="grid" || visualizationChoice=="rings"){
                     drawNewImage();
                 }
             });
@@ -334,7 +333,7 @@ while (newImageContainer.firstChild) {
             clickXPosition = e.offsetX / widthScalingRatio;
             clickYPosition = e.offsetY / widthScalingRatio;
             console.log(`Clicked at (${clickXPosition}, ${clickXPosition})`);
-            if(visualizationChoice=="grid"){
+            if(visualizationChoice=="grid" || visualizationChoice=="rings"){
                 drawNewImage();
             }
         });
@@ -361,16 +360,6 @@ function refresh(){
     setTimeout(drawNewImage,5);
 
 }
-
-//shortcut key presses
-document.addEventListener('keydown', function(event) {
-    if (event.key === 'r') {
-        refresh();
-
-    } else if (event.key === 's') {
-        saveImage();
-    }
-});
 
 function drawNewImage(){
 
@@ -927,6 +916,52 @@ function drawNewImage(){
         newCtx.globalAlpha = Math.min(1,Math.max(0,1-(noiseProbability/100)));
         newCtx.drawImage(originalImage, 0, 0);
 
+    } else if(visualizationChoice == "rings"){
+        console.log("running rings visual");
+
+        var minPointRadius = 1;
+        var maxPointRadius = Math.round(actualWidth/150) * (dotSizeFactor/100 + 0.5);
+        var pointRadiusRange = maxPointRadius - minPointRadius;
+
+        if(clickXPosition === undefined) {
+            clickXPosition = actualWidth/2;
+        }
+        if(clickYPosition === undefined) {
+            clickYPosition = actualHeight/2;
+        }
+
+        var numRings = Math.ceil(noiseProbability) * 2;
+
+        for(var i=0; i<numRings; i++){
+            
+            var radius = Math.floor(Math.max(actualWidth,actualHeight)/2 * 0.96 * ((i+1)/numRings));
+            var centerX = clickXPosition;
+            var centerY = clickYPosition;
+    
+            for (let angle = 0; angle < 360; angle++) {
+                var x = Math.round(centerX + Math.cos(angle * Math.PI / 180) * radius);
+                var y = Math.round(centerY + Math.sin(angle * Math.PI / 180) * radius);
+    
+                var currentPixel = y*actualWidth + x;
+                //var currentPixel = j;
+    
+                var red = pixels[currentPixel*4];
+                var green = pixels[currentPixel*4 + 1];
+                var blue = pixels[currentPixel*4 + 2];
+                var alpha = 1.0;
+    
+                var startAngle = Math.random() * (2 * Math.PI);
+                var endAngle = Math.random() * (2 * Math.PI);
+                var currentPointRadius = minPointRadius + Math.random() * pointRadiusRange;
+    
+                newCtx.beginPath();
+                newCtx.arc(x, y, currentPointRadius, startAngle, endAngle);
+                newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+                newCtx.fill();
+            }
+
+        }
+
     }
 
     const newImageData = newCanvas.toDataURL();
@@ -944,6 +979,16 @@ function drawNewImage(){
 }
 
 //Helper Functions
+
+//shortcut key presses
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'r') {
+        refresh();
+
+    } else if (event.key === 's') {
+        saveImage();
+    }
+});
 
 function saveImage(){
     const image = newImageContainer.querySelector('img');
