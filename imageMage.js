@@ -187,6 +187,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "grid"},
         {menuOptions: [1,0,0,1,0,0,1,1,0], name: "mondrian"},
         {menuOptions: [1,0,0,1,0,1,0,0,1], name: "rings"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1], name: "dotify"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -922,6 +923,9 @@ function drawNewImage(){
         if(ringsLoadCounter == 0){
             // show the popup
             popup.style.display = 'block';
+
+            noiseProbabilityInput.value = 23;
+            noiseProbability = 23;
         }
         ringsLoadCounter++;
 
@@ -940,7 +944,7 @@ function drawNewImage(){
 
         for(var i=0; i<numRings; i++){
             
-            var radius = Math.floor(Math.max(actualWidth,actualHeight)/2 * 0.96 * ((i+1)/numRings));
+            var radius = Math.floor(Math.max(actualWidth,actualHeight)/2 * 1.1 * ((i+1)/numRings));
             var centerX = clickXPosition;
             var centerY = clickYPosition;
     
@@ -967,6 +971,38 @@ function drawNewImage(){
             }
 
         }
+
+    } else if(visualizationChoice == "dotify"){
+        console.log("running dotify visual");
+
+        var step=Math.max(4,Math.ceil(noiseProbability/2));
+        var xRemainder = (actualWidth - step/2) % step;
+        var yRemainder = (actualHeight - step/2) % step;
+        console.log("Step: "+step);
+
+        for(y=0; y<actualHeight; y+=step){
+            for(x=0; x<actualWidth; x+=step){
+                var currentPixelDataValue = Math.floor(y*actualWidth+x)*4;
+
+                var red = pixels[currentPixelDataValue];
+                var green = pixels[currentPixelDataValue+1];
+                var blue = pixels[currentPixelDataValue+2];
+                var alpha = 1;
+    
+                var startAngle = 0;
+                var endAngle = (2 * Math.PI);
+                var currentPointRadius = step/2;
+    
+                newCtx.beginPath();
+                newCtx.arc(x+xRemainder/2, y+yRemainder/2, currentPointRadius, startAngle, endAngle);
+                newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+                newCtx.fill();
+
+            }
+        }
+    
+
+
 
     }
 
