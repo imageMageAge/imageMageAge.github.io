@@ -188,6 +188,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,1,1,0], name: "mondrian"},
         {menuOptions: [1,0,0,1,0,1,0,0,1], name: "rings"},
         {menuOptions: [1,0,0,1,0,0,0,0,1], name: "dotify"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "noisySort"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -975,7 +976,7 @@ function drawNewImage(){
     } else if(visualizationChoice == "dotify"){
         console.log("running dotify visual");
 
-        var step=Math.max(4,Math.ceil(noiseProbability/2));
+        var step=Math.max(4,Math.ceil(noiseProbability/0.5));
         var xRemainder = (actualWidth - step/2) % step;
         var yRemainder = (actualHeight - step/2) % step;
         console.log("Step: "+step);
@@ -1001,8 +1002,37 @@ function drawNewImage(){
             }
         }
     
+    } else if(visualizationChoice == "noisySort"){
+        console.log("running noisy sort visual");
 
+        var numPixels = actualWidth * actualHeight;
+        var originalPixelData = [];
 
+        for(var i=0; i<numPixels; i++){
+
+            var noise = Math.random() * (noiseProbability*4);
+
+            var red = pixels[i*4];
+            var green = pixels[i*4+1];
+            var blue = pixels[i*4+2];
+            //var score = Math.sqrt( .241 * red + .691 * green + .068 * blue + noise);
+            var score = Math.pow((0.299 * red + 0.587 * green + 0.114 * blue + noise), 1/2.2)
+            //var score = red+green+blue;
+
+            originalPixelData[i] = {red: red, green: green, blue: blue, score: score, id: i};
+
+        }
+
+        var sortedPixelData = originalPixelData.slice().sort((a, b) => a.score - b.score);
+
+        for (let i = 0; i < sortedPixelData.length; i++) {
+            var red = sortedPixelData[i].red;
+            var green = sortedPixelData[i].green;
+            var blue = sortedPixelData[i].blue;
+            var alpha = 1;
+            newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+            newCtx.fillRect(i % actualWidth, Math.floor(i / actualWidth), 1, 1);
+        }
 
     }
 
@@ -1029,6 +1059,8 @@ document.addEventListener('keydown', function(event) {
 
     } else if (event.key === 's') {
         saveImage();
+    } else if (event.key === 'e') {
+        saveBothImages();
     }
 });
 
@@ -1041,6 +1073,47 @@ function saveImage(){
     
     // Create a blob from the image
     fetch(imageUrl)
+        .then(response => response.blob())
+        .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        link.click();
+        });
+
+}
+
+function saveBothImages(){
+
+    // Get the two images
+    const originalImage = imageContainer.querySelector('img');
+    const newImage = newImageContainer.querySelector('img');
+
+    // Create a canvas element
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set the canvas dimensions to match the combined width of the two images
+    canvas.width = actualWidth*2;
+    canvas.height = actualHeight;
+    console.log("Save both images -- canvas width / height: "+canvas.width+", "+canvas.height);
+
+    // Draw the original image on the left side of the canvas
+    ctx.drawImage(originalImage, 0, 0, actualWidth, actualHeight);
+
+    // Draw the new image on the right side of the canvas
+    ctx.drawImage(newImage, actualWidth, 0, actualWidth, actualHeight);
+
+    // Use the canvas.toDataURL() method to generate a data URL for the combined image
+    const combinedImageURL = canvas.toDataURL();
+
+    const link = document.createElement('a');
+    const date = new Date();
+    const filename = `image_${date.toLocaleDateString()}_${date.toLocaleTimeString()}.png`;
+    
+    // Create a blob from the image
+    fetch(combinedImageURL)
         .then(response => response.blob())
         .then(blob => {
         const url = URL.createObjectURL(blob);
@@ -1364,13 +1437,13 @@ function initPhotoCarousel(){
         });
     }
     
-    //Autoplay only twice
+    //Autoplay three times only
     let iterationCount = 0;
     let autoplayIntervalId = setInterval(() => {
     currentSlide++;
     updateCarousel();
     iterationCount++;
-    if (iterationCount >= 2) {
+    if (iterationCount >= 3) {
         clearInterval(autoplayIntervalId);
     }
     }, 4000); //milliseconds before slide change
