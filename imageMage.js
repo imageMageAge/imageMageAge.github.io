@@ -1047,25 +1047,35 @@ function drawNewImage(){
         var numPixels = actualWidth * actualHeight;
         var originalPixelData = [];
 
-        for(var i=0; i<numPixels; i++){
+        for(var i=numPixels-1; i>=0; i--){
 
             var red = pixels[i*4];
             var green = pixels[i*4+1];
             var blue = pixels[i*4+2];
             var lum = Math.pow((0.299 * red + 0.587 * green + 0.114 * blue), 1/2.2)
             var threshold = noiseProbability / 9;
+            var alpha = 1;
+            var pixelWidth = 1;
+            var pixelHeight = 1;
 
             if(lum > threshold){
-                var alpha = 1;
                 newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+                pixelWidth = 1;
+                pixelHeight = 1;
             } else {
-                var randomRed = Math.random() * 255;
-                var randomGreen = Math.random() * 255;
-                var randomBlue = Math.random() * 255;
-                var alpha = 1;
-                newCtx.fillStyle = `rgba(${randomRed}, ${randomGreen}, ${randomBlue}, ${alpha})`;
+                if(Math.random()<0.7){
+                    newCtx.fillStyle = `black`;
+                } else {
+                    var randomRed = Math.random() * 255;
+                    var randomGreen = Math.random() * 255;
+                    var randomBlue = Math.random() * 255;
+                    newCtx.fillStyle = `rgba(${randomRed}, ${randomGreen}, ${randomBlue}, ${alpha})`;
+                }
+                pixelWidth = Math.ceil(Math.random()* actualWidth*0.006);
+                pixelHeight = Math.ceil(Math.random()* actualHeight*0.006);
+
             }
-            newCtx.fillRect(i % actualWidth, Math.floor(i / actualWidth), 1, 1);
+            newCtx.fillRect(i % actualWidth, Math.floor(i / actualWidth), pixelWidth, pixelHeight);
 
         }
 
