@@ -678,31 +678,35 @@ function drawNewImage(){
             var currentRed = pixels[j];
             var currentGreen = pixels[j + 1];
             var currentBlue = pixels[j + 2];
+            var currentLum = Math.pow((0.299 * currentRed + 0.587 * currentGreen + 0.114 * currentBlue), 1/2.2);
 
             var previousRed = pixels[j-4];
             var previousGreen = pixels[j-4+1];
             var previousBlue = pixels[j-4+2];
+            var previousLum = Math.pow((0.299 * currentRed + 0.587 * currentGreen + 0.114 * currentBlue), 1/2.2);
 
             var redDelta = Math.abs(currentRed - previousRed);
             var greenDelta = Math.abs(currentGreen - previousGreen);
             var blueDelta = Math.abs(currentBlue - previousBlue);
+            var lumDelta = Math.abs(currentLum - previousLum);
 
-            var pixelColor = Math.max(0,255-(redDelta + greenDelta + blueDelta)*3);
             var alpha = Math.pow(Math.min(1,Math.max(0,(redDelta + greenDelta + blueDelta)/100)), 4);
 
             var primaryThreshold = 14 * (Math.pow((noiseProbability/100 + 0.5),5));
 
-            var pixelWidth = Math.round(Math.random()*actualWidth*0.006);
-            var pixelHeight = Math.round(Math.random()*5);
+            var pixelWidth = Math.round(Math.random()*actualWidth*0.012);
+            var pixelHeight = Math.round(Math.random()*7);
 
-            if(redDelta > primaryThreshold || greenDelta > primaryThreshold || blueDelta > primaryThreshold){
-                //newCtx.fillStyle = `rgba(${pixelColor}, ${pixelColor}, ${pixelColor}, ${alpha})`; //this will do black&white
+            if(redDelta > primaryThreshold || greenDelta > primaryThreshold || blueDelta > primaryThreshold || lumDelta > 1){
                 newCtx.fillStyle = `rgba(${currentRed}, ${currentGreen}, ${currentBlue}, ${alpha})`; //colour sketch
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
 
             } else {
-                //newCtx.fillStyle = "white";
-                //newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), 1, 1);
+                if(Math.random() < 0.05){
+                    var alpha = 0.1;
+                    newCtx.fillStyle = `rgba(${currentRed}, ${currentGreen}, ${currentBlue}, ${alpha})`; //colour sketch
+                    newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth*0.75, pixelHeight*0.75);
+                }
             }
 
         }
