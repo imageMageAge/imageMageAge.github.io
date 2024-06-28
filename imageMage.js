@@ -189,7 +189,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,1,0,0,1], name: "rings"},
         {menuOptions: [1,0,0,1,0,0,0,0,1], name: "gumball"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "noisySort"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "fuzzingOver"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "void"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -1041,8 +1041,8 @@ function drawNewImage(){
             newCtx.fillRect(i % actualWidth, Math.floor(i / actualWidth), 1, 1);
         }
 
-    } else if(visualizationChoice == "fuzzingOver"){
-        console.log("running fuzzingOver visual");
+    } else if(visualizationChoice == "void"){
+        console.log("running void visual");
 
         var numPixels = actualWidth * actualHeight;
         var originalPixelData = [];
