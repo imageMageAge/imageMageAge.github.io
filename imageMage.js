@@ -187,8 +187,9 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "grid"},
         {menuOptions: [1,0,0,1,0,0,1,1,0], name: "mondrian"},
         {menuOptions: [1,0,0,1,0,1,0,0,1], name: "rings"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1], name: "dotify"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1], name: "gumball"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "noisySort"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "fuzzingOver"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -979,8 +980,8 @@ function drawNewImage(){
 
         }
 
-    } else if(visualizationChoice == "dotify"){
-        console.log("running dotify visual");
+    } else if(visualizationChoice == "gumball"){
+        console.log("running gumball visual");
 
         var step=Math.max(4,Math.ceil(noiseProbability/0.5));
         var xRemainder = (actualWidth - step/2) % step;
@@ -1038,6 +1039,34 @@ function drawNewImage(){
             var alpha = 1;
             newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
             newCtx.fillRect(i % actualWidth, Math.floor(i / actualWidth), 1, 1);
+        }
+
+    } else if(visualizationChoice == "fuzzingOver"){
+        console.log("running fuzzingOver visual");
+
+        var numPixels = actualWidth * actualHeight;
+        var originalPixelData = [];
+
+        for(var i=0; i<numPixels; i++){
+
+            var red = pixels[i*4];
+            var green = pixels[i*4+1];
+            var blue = pixels[i*4+2];
+            var lum = Math.pow((0.299 * red + 0.587 * green + 0.114 * blue), 1/2.2)
+            var threshold = noiseProbability / 9;
+
+            if(lum > threshold){
+                var alpha = 1;
+                newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+            } else {
+                var randomRed = Math.random() * 255;
+                var randomGreen = Math.random() * 255;
+                var randomBlue = Math.random() * 255;
+                var alpha = 1;
+                newCtx.fillStyle = `rgba(${randomRed}, ${randomGreen}, ${randomBlue}, ${alpha})`;
+            }
+            newCtx.fillRect(i % actualWidth, Math.floor(i / actualWidth), 1, 1);
+
         }
 
     }
