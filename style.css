@@ -34,7 +34,7 @@
 }
 
 #siteLogo{
-    width: 95px;
+    width: 90px;
 }
 
 /* applies when screen is wide enough */ 
@@ -92,7 +92,7 @@ li {
 
 #buttonTableDiv{
     margin-top: 2px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
 }
 
 #inputTable{

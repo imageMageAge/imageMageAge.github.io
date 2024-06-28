@@ -931,7 +931,8 @@ function drawNewImage(){
         ringsLoadCounter++;
 
         var minPointRadius = 1;
-        var maxPointRadius = Math.round(actualWidth/150) * (dotSizeFactor/100 + 0.5);
+        var maxPointRadius = Math.round( (actualWidth/250) * (dotSizeFactor/100 + 0.5) );
+        //var maxPointRadius = 1;
         var pointRadiusRange = maxPointRadius - minPointRadius;
 
         if(clickXPosition === undefined) {
@@ -961,8 +962,9 @@ function drawNewImage(){
                 var blue = pixels[currentPixel*4 + 2];
                 var alpha = 1.0;
     
-                var startAngle = Math.random() * (2 * Math.PI);
-                var endAngle = Math.random() * (2 * Math.PI);
+                var startAngle = 0;
+                //var endAngle = Math.random() * (2 * Math.PI);
+                var endAngle = (2 * Math.PI);
                 var currentPointRadius = minPointRadius + Math.random() * pointRadiusRange;
     
                 newCtx.beginPath();
@@ -1397,6 +1399,7 @@ function updateColorPickers(){
     refresh();
 }
 
+var carouselClickCounter = 0;
 
 function initPhotoCarousel(){
 
@@ -1409,6 +1412,7 @@ function initPhotoCarousel(){
 
     carouselDots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
+            carouselClickCounter++;
             currentSlide = index;
             updateCarousel();
         });
@@ -1440,13 +1444,16 @@ function initPhotoCarousel(){
     //Autoplay three times only
     let iterationCount = 0;
     let autoplayIntervalId = setInterval(() => {
-    currentSlide++;
-    updateCarousel();
-    iterationCount++;
-    if (iterationCount >= 3) {
-        clearInterval(autoplayIntervalId);
-    }
-    }, 4000); //milliseconds before slide change
+        if(carouselClickCounter>0){
+            return;
+        }
+        currentSlide++;
+        updateCarousel();
+        iterationCount++;
+        if (iterationCount >= 3) {
+            clearInterval(autoplayIntervalId);
+        }
+    }, 4800); //milliseconds before slide change
 
 }
 
