@@ -7,9 +7,9 @@ Live version: <b>https://imagemageage.github.io/</b>
 * Drag the sliders / re-generate new images 
 * Enjoy :)
 
-<img src="images/KKSunsetDuo.png"/><br />
+<img src="images/headerAnimation2.gif"/><br />
 <img src="images/siteOGImage2.png"/><br />
-<img src="images/headerAnimationCompress.gif"/><br />
+<img src="images/KKSunsetDuo.png"/><br />
 
 I'd be very happy to discuss and collaborate on any new visual styles / ideas that you might have!
 
