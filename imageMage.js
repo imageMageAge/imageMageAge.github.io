@@ -695,7 +695,7 @@ function drawNewImage(){
 
             var primaryThreshold = 14 * (Math.pow((noiseProbability/100 + 0.5),5));
 
-            var pixelWidth = Math.round(Math.random()*actualWidth*0.012);
+            var pixelWidth = Math.round(Math.random()*actualWidth*0.01);
             var pixelHeight = Math.round(Math.random()*7);
 
             if(redDelta > primaryThreshold || greenDelta > primaryThreshold || blueDelta > primaryThreshold || lumDelta > 1){
@@ -703,8 +703,8 @@ function drawNewImage(){
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
 
             } else {
-                if(Math.random() < 0.05){
-                    var alpha = 0.1;
+                if(Math.random() < 0.04){
+                    var alpha = 0.2;
                     newCtx.fillStyle = `rgba(${currentRed}, ${currentGreen}, ${currentBlue}, ${alpha})`; //colour sketch
                     newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth*0.75, pixelHeight*0.75);
                 }
