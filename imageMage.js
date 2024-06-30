@@ -190,6 +190,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,0,0,1], name: "gumball"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "noisySort"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "void"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1], name: "braille"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -1045,7 +1046,6 @@ function drawNewImage(){
         console.log("running void visual");
 
         var numPixels = actualWidth * actualHeight;
-        var originalPixelData = [];
 
         for(var i=numPixels-1; i>=0; i--){
 
@@ -1076,6 +1076,56 @@ function drawNewImage(){
 
             }
             newCtx.fillRect(i % actualWidth, Math.floor(i / actualWidth), pixelWidth, pixelHeight);
+
+        }
+
+    } else if(visualizationChoice == "braille"){
+        console.log("running braille visual");
+
+        var numPixels = actualWidth * actualHeight;
+        var colSpacing = Math.floor(actualWidth/50 * Math.pow((noiseProbability/100 + 0.5),2) );
+        var rowSpacing = colSpacing;
+
+        var alpha = 1;
+        var pixelWidth = 1;
+        var pixelHeight = 1;
+        var skipRow = true;
+        var skipCol = true;
+
+        for(var row=0; row<actualHeight; row++){
+            skipRow = true;
+            if(row%rowSpacing == 0){
+                skipRow = false;
+            }
+
+            for(var col=0; col<actualWidth; col++){
+                var currentPixel = row*actualWidth + col;
+                var red = pixels[currentPixel*4];
+                var green = pixels[currentPixel*4+1];
+                var blue = pixels[currentPixel*4+2];
+                var lum = Math.pow((0.299 * red + 0.587 * green + 0.114 * blue), 1/2.2)
+                
+                var minRadius = 3;
+                var maxRadius = colSpacing/2;
+
+                var dotRadius = Math.max(minRadius,Math.min(maxRadius,Math.pow(lum/2,1.8)));
+
+                skipCol = true;
+                if(col%colSpacing == 0){
+                    skipCol = false;
+                }
+
+                if(skipRow == true || skipCol == true){
+                    //newCtx.fillStyle = "white";
+                    //newCtx.fillRect(col, row, 1, 1);
+                } else {
+                    newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+                    newCtx.beginPath();
+                    newCtx.arc(col, row, dotRadius, 0, 2*Math.PI);
+                    newCtx.fill();
+                }
+
+            }
 
         }
 
