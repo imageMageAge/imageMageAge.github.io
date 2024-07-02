@@ -103,6 +103,13 @@ palettePresets.forEach((preset) => {
 
 var paletteChoice = paletteChoiceInput.value;
 
+//dual color picker
+var dualColorPicker1 = document.getElementById('dualColorInput1');
+var dualColorPicker2 = document.getElementById('dualColorInput2');
+
+var dualColor1 = dualColorPicker1.value;
+var dualColor2 = dualColorPicker2.value;
+
 //Pop-up for grid visual style
 var popup = document.querySelector('.popup');
 
@@ -137,6 +144,8 @@ noiseColorRangeInput.addEventListener('change', refresh);
 dotSizeFactorInput.addEventListener('change', refresh);
 
 paletteChoiceInput.addEventListener('change', changePalette);
+dualColorPicker1.addEventListener('change', refresh);
+dualColorPicker2.addEventListener('change', refresh);
 
 //main method
 initPhotoCarousel();
@@ -162,6 +171,9 @@ function getUserInputs() {
 
     rgbColorRange = noiseColorRange/100 * 255;
 
+    dualColor1 = dualColorPicker1.value;
+    dualColor2 = dualColorPicker2.value;
+
     if(visualizationChoice == "sketch"){
         backgroundColor = "#FFFFFF";
     } else {
@@ -173,26 +185,26 @@ function getUserInputs() {
 
 function toggleInputMenu(){
 
-    var numColumns = 9;
+    var numColumns = 10;
 
     //columns: Style, RGBA shift, Smear, Sensitivity, Color Range, Max Dot Size, Palette, Color pickers, Background
     //Value of 1 if the columnn should be shown for that style, 0 if hidden
     var menuControlFlags = [
-        {menuOptions: [1,0,0,0,1,1,0,0,0], name: "pointillist"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "sketch"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "roller"},
-        {menuOptions: [1,0,0,1,0,0,1,1,0], name: "palletize"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "pixel"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1], name: "clippings"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "grid"},
-        {menuOptions: [1,0,0,1,0,0,1,1,0], name: "mondrian"},
-        {menuOptions: [1,0,0,1,0,1,0,0,1], name: "rings"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1], name: "gumball"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "noisySort"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0], name: "void"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1], name: "braille"},
-        {menuOptions: [1,0,0,1,0,0,1,1,0], name: "dust"},
-        {menuOptions: [1,0,0,1,0,0,1,1,0], name: "outlines"},
+        {menuOptions: [1,0,0,0,1,1,0,0,0,0], name: "pointillist"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "sketch"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "roller"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "palletize"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "pixel"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "clippings"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "grid"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "mondrian"},
+        {menuOptions: [1,0,0,1,0,1,0,0,1,0], name: "rings"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "gumball"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "noisySort"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "void"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "braille"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "dust"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,1], name: "outlines"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -1191,14 +1203,26 @@ function drawNewImage(){
             var nextLum = Math.pow((0.299 * nextRed + 0.587 * nextGreen + 0.114 * nextBlue), 1/2.2);
 
             var primaryThreshold = 7 * (Math.pow((noiseProbability/100 + 0.5),1.1));
+            var secondaryThreshold = 7 * (Math.pow(((100-noiseProbability)/100 + 0.5),1.1));
 
             var pixelWidth = Math.random()*5;
             var pixelHeight = Math.random()*5;
 
+            /*
             var pixelColor = chosenPalette[ Math.floor(Math.random() * chosenPalette.length) ];
+            
+            var randomPalette = palettePresets[Math.floor(palettePresets.length * Math.random())].palette;
+            //var pixelColor2 = randomPalette[ Math.floor(Math.random() * randomPalette.length) ];
+            var pixelColor2 = "brown";
+            */
 
             if(currentLum < primaryThreshold && ( previousLum > primaryThreshold || nextLum > primaryThreshold) ){
-                newCtx.fillStyle = pixelColor;
+                newCtx.fillStyle = dualColor1;
+                //newCtx.globalAlpha = 1;
+                newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
+            }else if(currentLum < secondaryThreshold && ( previousLum > secondaryThreshold || nextLum > secondaryThreshold) ){
+                newCtx.fillStyle = dualColor2;
+                //newCtx.globalAlpha = 0.5;
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
             }
         }
