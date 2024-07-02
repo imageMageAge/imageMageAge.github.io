@@ -181,7 +181,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,0,1,1,0,0,0], name: "pointillist"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "sketch"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "roller"},
-        {menuOptions: [1,0,0,0,0,0,1,1,0], name: "palletize"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0], name: "palletize"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "pixel"},
         {menuOptions: [1,0,0,1,0,0,0,0,1], name: "clippings"},
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "grid"},
@@ -192,6 +192,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,0,0,0], name: "void"},
         {menuOptions: [1,0,0,1,0,0,0,0,1], name: "braille"},
         {menuOptions: [1,0,0,1,0,0,1,1,0], name: "dust"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0], name: "outlines"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -718,6 +719,9 @@ function drawNewImage(){
         console.log("running palletize visual");
         console.log("Color Palette: "+paletteChoice);
 
+        //faithful reproduction
+        newCtx.drawImage(originalImage, 0, 0);
+
         for (let j = 0; j < pixels.length; j += 4) {
             
             var red = pixels[j];
@@ -728,7 +732,7 @@ function drawNewImage(){
             var targetR;
             var targetG;
             var targetB;
-            var alpha = 1;
+            var alpha = Math.min(1,Math.max(0,noiseProbability/100));
 
             for(i=0; i<chosenPaletteRGBValues.length; i++){
 
@@ -1164,18 +1168,40 @@ function drawNewImage(){
                 newCtx.fillStyle = pixelColor;
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
             }
-            /*
-            if(redDelta > primaryThreshold || greenDelta > primaryThreshold || blueDelta > primaryThreshold || lumDelta > 1){
+        }
+    } else if(visualizationChoice == "outlines"){
+        console.log("running outlines visual");
+        var skipStep = 1;
+
+        for (let j = pixels.length-4; j > 0; j -= 4*skipStep) {
+            
+            var currentRed = pixels[j];
+            var currentGreen = pixels[j + 1];
+            var currentBlue = pixels[j + 2];
+            var currentLum = Math.pow((0.299 * currentRed + 0.587 * currentGreen + 0.114 * currentBlue), 1/2.2);
+
+            var previousRed = pixels[j-4];
+            var previousGreen = pixels[j-4+1];
+            var previousBlue = pixels[j-4+2];
+            var previousLum = Math.pow((0.299 * previousRed + 0.587 * previousGreen + 0.114 * previousBlue), 1/2.2);
+
+            var nextRed = pixels[j+4];
+            var nextGreen = pixels[j+4 + 1];
+            var nextBlue = pixels[j+4 + 2];
+            var nextLum = Math.pow((0.299 * nextRed + 0.587 * nextGreen + 0.114 * nextBlue), 1/2.2);
+
+            var primaryThreshold = 7 * (Math.pow((noiseProbability/100 + 0.5),1.1));
+
+            var pixelWidth = Math.random()*5;
+            var pixelHeight = Math.random()*5;
+
+            var pixelColor = chosenPalette[ Math.floor(Math.random() * chosenPalette.length) ];
+
+            if(currentLum < primaryThreshold && ( previousLum > primaryThreshold || nextLum > primaryThreshold) ){
                 newCtx.fillStyle = pixelColor;
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
-
-            } else {
-
             }
-            */
-
         }
-
     }
 
     const newImageData = newCanvas.toDataURL();
