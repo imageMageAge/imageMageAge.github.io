@@ -120,6 +120,7 @@ popup.addEventListener('click', () => {
 
 var gridLoadCounter = 0;
 var ringsLoadCounter = 0;
+var frontierLoadCounter = 0;
 
 //Save and export the new image in png format
 var saveButton = document.getElementById('save-image-button');
@@ -187,7 +188,7 @@ function toggleInputMenu(){
 
     var numColumns = 10;
 
-    //columns: Style, RGBA shift, Smear, Sensitivity, Color Range, Max Dot Size, Palette, Color pickers, Background
+    //columns: Style, RGBA shift, Smear, Sensitivity, Color Range, Max Dot Size, Palette, Color pickers, Background, dual color picker
     //Value of 1 if the columnn should be shown for that style, 0 if hidden
     var menuControlFlags = [
         {menuOptions: [1,0,0,0,1,1,0,0,0,0], name: "pointillist"},
@@ -205,6 +206,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "braille"},
         {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "dust"},
         {menuOptions: [1,0,0,1,0,0,0,0,0,1], name: "outlines"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "frontier"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -280,8 +282,8 @@ function showDefaultImage() {
             img.addEventListener('click', (e) => {
                 clickXPosition = e.offsetX / widthScalingRatio;
                 clickYPosition = e.offsetY / widthScalingRatio;
-                console.log(`Clicked at (${clickXPosition}, ${clickXPosition})`);
-                if(visualizationChoice=="grid" || visualizationChoice=="rings"){
+                console.log(`Clicked at (${clickXPosition}, ${clickYPosition})`);
+                if(visualizationChoice=="grid" || visualizationChoice=="rings" || visualizationChoice=="frontier"){
                     drawNewImage();
                 }
             });
@@ -351,8 +353,8 @@ while (newImageContainer.firstChild) {
         originalImg.addEventListener('click', (e) => {
             clickXPosition = e.offsetX / widthScalingRatio;
             clickYPosition = e.offsetY / widthScalingRatio;
-            console.log(`Clicked at (${clickXPosition}, ${clickXPosition})`);
-            if(visualizationChoice=="grid" || visualizationChoice=="rings"){
+            console.log(`Clicked at (${clickXPosition}, ${clickYPosition})`);
+            if(visualizationChoice=="grid" || visualizationChoice=="rings" || visualizationChoice=="frontier"){
                 drawNewImage();
             }
         });
@@ -1205,27 +1207,65 @@ function drawNewImage(){
             var primaryThreshold = 7 * (Math.pow((noiseProbability/100 + 0.5),1.1));
             var secondaryThreshold = 7 * (Math.pow(((100-noiseProbability)/100 + 0.5),1.1));
 
-            var pixelWidth = Math.random()*5;
-            var pixelHeight = Math.random()*5;
-
-            /*
-            var pixelColor = chosenPalette[ Math.floor(Math.random() * chosenPalette.length) ];
-            
-            var randomPalette = palettePresets[Math.floor(palettePresets.length * Math.random())].palette;
-            //var pixelColor2 = randomPalette[ Math.floor(Math.random() * randomPalette.length) ];
-            var pixelColor2 = "brown";
-            */
+            var pixelWidth = Math.random()*actualWidth*0.004;
+            var pixelHeight = Math.random()*actualHeight*0.004;
 
             if(currentLum < primaryThreshold && ( previousLum > primaryThreshold || nextLum > primaryThreshold) ){
                 newCtx.fillStyle = dualColor1;
-                //newCtx.globalAlpha = 1;
+                newCtx.globalAlpha = 1;
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
             }else if(currentLum < secondaryThreshold && ( previousLum > secondaryThreshold || nextLum > secondaryThreshold) ){
                 newCtx.fillStyle = dualColor2;
-                //newCtx.globalAlpha = 0.5;
+                newCtx.globalAlpha = 1;
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
+            }else if(currentLum < primaryThreshold){
+                if(Math.random()<0.1){
+                    newCtx.fillStyle = dualColor1;
+                    newCtx.globalAlpha = 0.5;
+                    newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), 1, 1);
+                }
             }
         }
+    } else if(visualizationChoice == "frontier"){
+        console.log("running frontier visual");
+
+        if(frontierLoadCounter == 0){
+            // show the popup
+            popup.style.display = 'block';
+
+            clickXPosition = actualWidth/2;
+            clickYPosition = actualHeight/2;
+        }
+        frontierLoadCounter++;
+
+        var heightWidthRatio = actualHeight / actualWidth;
+        var alpha = 1;
+        var pixelWidth = 1;
+        var pixelHeight = 1;
+
+        for(var y=0; y<actualHeight; y++){
+
+            for(var x=0; x<actualWidth; x++){
+
+                var currentPixel = (y*actualWidth + x)*4;
+
+                var currentRed = pixels[currentPixel];
+                var currentGreen = pixels[currentPixel + 1];
+                var currentBlue = pixels[currentPixel + 2];
+                var currentLum = Math.pow((0.299 * currentRed + 0.587 * currentGreen + 0.114 * currentBlue), 1/2.2);
+    
+                var pixelDistance = Math.abs(y - clickYPosition)/actualHeight * heightWidthRatio + Math.abs(x - clickXPosition)/actualWidth;
+                var primaryThreshold = 10 - (pixelDistance*(noiseProbability/3));
+
+                if(currentLum < primaryThreshold){
+                    newCtx.fillStyle = `rgba(${currentRed}, ${currentGreen}, ${currentBlue}, ${alpha})`;
+                    newCtx.fillRect(x, y, pixelWidth, pixelHeight);
+                }
+
+            }
+
+        }
+
     }
 
     const newImageData = newCanvas.toDataURL();
