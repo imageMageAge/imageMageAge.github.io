@@ -118,6 +118,7 @@ popup.addEventListener('click', () => {
     popup.style.display = 'none';
 });
 
+var drawImageCounter = 0;
 var gridLoadCounter = 0;
 var ringsLoadCounter = 0;
 var frontierLoadCounter = 0;
@@ -182,9 +183,10 @@ function getUserInputs() {
         backgroundColor = backgroundColorInput.value;
     }
 
-    if(eclipseLoadCounter == 0){
-        backgroundColor = "#00000";
-        backgroundColorInput.value = "#00000";
+    //reset to the default background color after the user switches off from Eclipse
+    if(drawImageCounter == 0 && visualizationChoice != "eclipse"){
+        backgroundColorInput.value = "#FFF9EB";
+        backgroundColor = "#FFF9EB";
     }
 
     toggleInputMenu();
@@ -413,6 +415,8 @@ function drawNewImage(){
 
     console.log("actual width: "+actualWidth);
     console.log("actual height: "+actualHeight);
+
+    drawImageCounter++;
 
     //remove any existing new images
     while (newImageContainer.firstChild) {
@@ -1276,9 +1280,19 @@ function drawNewImage(){
     } else if(visualizationChoice == "eclipse"){
         console.log("running eclipse visual");
 
+        if(eclipseLoadCounter == 0){
+            backgroundColor = "#000000";
+            backgroundColorInput.value = "#000000";
+        }
         eclipseLoadCounter++;
+        drawImageCounter = 0;
+
+        //draw background color
+        newCtx.fillStyle = backgroundColor;
+        newCtx.fillRect(0, 0, actualWidth, actualHeight);
+
         var alpha = 1;
-        var threshold = 0.4 + (0.55 * (noiseProbability/100));
+        var threshold = 0.3 + (0.6 * (noiseProbability/100));
 
         for(var y=0; y < actualHeight; y++ ){
             for(var x=0; x < actualWidth; x++ ){
@@ -1308,7 +1322,6 @@ function drawNewImage(){
     //hide the loading screen
     loadingScreen.classList.remove("lockOn");
     loadingScreen.classList.add("hidden");
-
 }
 
 //Helper Functions
