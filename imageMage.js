@@ -121,6 +121,7 @@ popup.addEventListener('click', () => {
 var gridLoadCounter = 0;
 var ringsLoadCounter = 0;
 var frontierLoadCounter = 0;
+var eclipseLoadCounter = 0;
 
 //Save and export the new image in png format
 var saveButton = document.getElementById('save-image-button');
@@ -181,6 +182,11 @@ function getUserInputs() {
         backgroundColor = backgroundColorInput.value;
     }
 
+    if(eclipseLoadCounter == 0){
+        backgroundColor = "#00000";
+        backgroundColorInput.value = "#00000";
+    }
+
     toggleInputMenu();
 }
 
@@ -207,6 +213,7 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "dust"},
         {menuOptions: [1,0,0,1,0,0,0,0,0,1], name: "outlines"},
         {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "frontier"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "eclipse"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -1266,6 +1273,28 @@ function drawNewImage(){
 
         }
 
+    } else if(visualizationChoice == "eclipse"){
+        console.log("running eclipse visual");
+
+        eclipseLoadCounter++;
+        var alpha = 1;
+        var threshold = 0.4 + (0.55 * (noiseProbability/100));
+
+        for(var y=0; y < actualHeight; y++ ){
+            for(var x=0; x < actualWidth; x++ ){
+
+                var actualPixel = (y * actualWidth + x) * 4;
+                var actualRed = pixels[actualPixel];
+                var actualGreen = pixels[actualPixel + 1];
+                var actualBlue = pixels[actualPixel + 2];
+                var actualLightness = rgbToLightness(actualRed, actualGreen, actualBlue);
+
+                if(actualLightness > threshold ){
+                    newCtx.fillStyle = `rgba(${actualRed}, ${actualGreen}, ${actualBlue}, ${alpha})`;
+                    newCtx.fillRect(x, y, 1, 1);
+                }
+            }
+        }
     }
 
     const newImageData = newCanvas.toDataURL();
@@ -1355,6 +1384,20 @@ function saveBothImages(){
         link.click();
         });
 
+}
+
+function rgbToHue(r, g, b) {
+    const rNorm = r / 255;
+    const gNorm = g / 255;
+    const bNorm = b / 255;
+    const hue = Math.atan2(Math.sqrt(3) * (gNorm - bNorm), 2 * rNorm - gNorm - bNorm);
+    return hue * 180 / Math.PI;
+}
+
+function rgbToLightness(r, g, b) {
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    return (max + min) / 2 / 255;
 }
 
 function extractRGB(rgbString) {
