@@ -105,6 +105,8 @@ Abstract art (check May 30 error version)
                 <th class="inputCol8">Colors</th>
                 <th class="inputCol9">Background</th>
                 <th class="inputCol10">Colors</th>
+                <th class="inputCol11">Lightness</th>
+                <th class="inputCol12">Saturation</th>
             </tr>
 
             <tr>
@@ -125,6 +127,7 @@ Abstract art (check May 30 error version)
                         <option value="mondrian">Mondrian</option>
                         <option value="noisySort">Noisy Sort</option>
                         <option value="eclipse">Eclipse</option>
+                        <option value="satLight">Sat-Light</option>
                     </select>
 
                     <!--
@@ -193,6 +196,14 @@ Abstract art (check May 30 error version)
                 <td class="inputCol10">
                     <input type="color" class="colorInput" id="dualColorInput1" value="#101947">
                     <input type="color" class="colorInput" id="dualColorInput2" value="#B64343">
+                </td>
+
+                <td class="inputCol11">
+                    <input class="input-number-noSpinners" type="range" id="lightnessLevel" value="20" min="0" max="100">
+                </td>
+
+                <td class="inputCol12">
+                    <input class="input-number-noSpinners" type="range" id="saturationLevel" value="45" min="0" max="100">
                 </td>
             </tr>
 

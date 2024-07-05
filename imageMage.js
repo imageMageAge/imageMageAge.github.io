@@ -7,6 +7,7 @@ var clickXPosition;
 var clickYPosition;
 var visualizationChoiceMenu = document.getElementById('visualizationChoice');
 var visualizationChoice = visualizationChoiceMenu.value;
+var previousVisualizationChoice = visualizationChoice;
 var loadingScreen = document.getElementById("coverScreen");
 
 var redInput = document.getElementById('red');
@@ -28,6 +29,12 @@ var rgbColorRange = noiseColorRange/100 * 255;
 
 var dotSizeFactorInput = document.getElementById('dotSizeFactor');
 var dotSizeFactor = dotSizeFactorInput.value;
+
+var lightnessLevelInput = document.getElementById('lightnessLevel');
+var lightnessLevel = lightnessLevelInput.value;
+
+var saturationLevelInput = document.getElementById('saturationLevel');
+var saturationLevel = saturationLevelInput.value;
 
 var isImageLoaded = false;
 
@@ -149,6 +156,9 @@ dotSizeFactorInput.addEventListener('change', refresh);
 paletteChoiceInput.addEventListener('change', changePalette);
 dualColorPicker1.addEventListener('change', refresh);
 dualColorPicker2.addEventListener('change', refresh);
+lightnessLevelInput.addEventListener('change', refresh);
+saturationLevelInput.addEventListener('change', refresh);
+
 
 //main method
 initPhotoCarousel();
@@ -177,14 +187,16 @@ function getUserInputs() {
     dualColor1 = dualColorPicker1.value;
     dualColor2 = dualColorPicker2.value;
 
-    if(visualizationChoice == "sketch"){
-        backgroundColor = "#FFFFFF";
-    } else {
-        backgroundColor = backgroundColorInput.value;
-    }
+    lightnessLevel = Math.min(100,Math.max(0,Number(lightnessLevelInput.value)));
+    saturationLevel = Math.min(100,Math.max(0,Number(saturationLevelInput.value)));
 
-    //reset to the default background color after the user switches off from Eclipse
-    if(drawImageCounter == 0 && visualizationChoice != "eclipse"){
+    //set background color
+    if(visualizationChoice == previousVisualizationChoice){
+        backgroundColor = backgroundColorInput.value;
+    } else if(visualizationChoice == "eclipse"){
+        backgroundColorInput.value = "#000000";
+        backgroundColor = "#000000";
+    } else {
         backgroundColorInput.value = "#FFF9EB";
         backgroundColor = "#FFF9EB";
     }
@@ -194,28 +206,29 @@ function getUserInputs() {
 
 function toggleInputMenu(){
 
-    var numColumns = 10;
+    var numColumns = 12;
 
     //columns: Style, RGBA shift, Smear, Sensitivity, Color Range, Max Dot Size, Palette, Color pickers, Background, dual color picker
     //Value of 1 if the columnn should be shown for that style, 0 if hidden
     var menuControlFlags = [
-        {menuOptions: [1,0,0,0,1,1,0,0,0,0], name: "pointillist"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "sketch"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "roller"},
-        {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "palletize"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "pixel"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "clippings"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "grid"},
-        {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "mondrian"},
-        {menuOptions: [1,0,0,1,0,1,0,0,1,0], name: "rings"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "gumball"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "noisySort"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0,0], name: "void"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "braille"},
-        {menuOptions: [1,0,0,1,0,0,1,1,0,0], name: "dust"},
-        {menuOptions: [1,0,0,1,0,0,0,0,0,1], name: "outlines"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "frontier"},
-        {menuOptions: [1,0,0,1,0,0,0,0,1,0], name: "eclipse"},
+        {menuOptions: [1,0,0,0,1,1,0,0,0,0,0,0], name: "pointillist"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0,0,0], name: "sketch"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0,0,0], name: "roller"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0,0,0,0], name: "palletize"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0,0,0], name: "pixel"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0,0,0], name: "clippings"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0,0,0], name: "grid"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0,0,0,0], name: "mondrian"},
+        {menuOptions: [1,0,0,1,0,1,0,0,1,0,0,0], name: "rings"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0,0,0], name: "gumball"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0,0,0], name: "noisySort"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0,0,0], name: "void"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0,0,0], name: "braille"},
+        {menuOptions: [1,0,0,1,0,0,1,1,0,0,0,0], name: "dust"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,1,0,0], name: "outlines"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0,0,0], name: "frontier"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,0,0,0], name: "eclipse"},
+        {menuOptions: [1,0,0,0,0,0,0,0,1,0,1,1], name: "satLight"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -400,6 +413,11 @@ function drawNewImage(){
         return; // exit the function if isImageLoaded is false
     }
 
+    //remove any existing new images
+    while (newImageContainer.firstChild) {
+        newImageContainer.removeChild(newImageContainer.firstChild);
+    }
+
     originalImage = imageContainer.querySelector('img');
 
     // Create a new image
@@ -417,11 +435,6 @@ function drawNewImage(){
     console.log("actual height: "+actualHeight);
 
     drawImageCounter++;
-
-    //remove any existing new images
-    while (newImageContainer.firstChild) {
-        newImageContainer.removeChild(newImageContainer.firstChild);
-    }
 
     if(visualizationChoice == "rgba"){
         console.log("running rgba visual");
@@ -1203,39 +1216,42 @@ function drawNewImage(){
             var currentRed = pixels[j];
             var currentGreen = pixels[j + 1];
             var currentBlue = pixels[j + 2];
-            var currentLum = Math.pow((0.299 * currentRed + 0.587 * currentGreen + 0.114 * currentBlue), 1/2.2);
+            //var currentLum = Math.pow((0.299 * currentRed + 0.587 * currentGreen + 0.114 * currentBlue), 1/2.2);
+            var currentLight = rgbToLightness(currentRed,currentGreen,currentBlue);
 
             var previousRed = pixels[j-4];
             var previousGreen = pixels[j-4+1];
             var previousBlue = pixels[j-4+2];
-            var previousLum = Math.pow((0.299 * previousRed + 0.587 * previousGreen + 0.114 * previousBlue), 1/2.2);
+            //var previousLum = Math.pow((0.299 * previousRed + 0.587 * previousGreen + 0.114 * previousBlue), 1/2.2);
+            var previousLight = rgbToLightness(previousRed,previousGreen,previousBlue);
+
 
             var nextRed = pixels[j+4];
             var nextGreen = pixels[j+4 + 1];
             var nextBlue = pixels[j+4 + 2];
-            var nextLum = Math.pow((0.299 * nextRed + 0.587 * nextGreen + 0.114 * nextBlue), 1/2.2);
+            //var nextLum = Math.pow((0.299 * nextRed + 0.587 * nextGreen + 0.114 * nextBlue), 1/2.2);
+            var nextLight = rgbToLightness(nextRed,nextGreen,nextBlue);
 
-            var primaryThreshold = 7 * (Math.pow((noiseProbability/100 + 0.5),1.1));
-            var secondaryThreshold = 7 * (Math.pow(((100-noiseProbability)/100 + 0.5),1.1));
+            var lightDelta = Math.abs(currentLight - previousLight) + Math.abs(currentLight - nextLight);
+            newCtx.globalAlpha = Math.max(0.2,lightDelta*3);
+
+            //var primaryThreshold = 7 * (Math.pow((noiseProbability/100 + 0.5),1.1));
+            //var secondaryThreshold = 7 * (Math.pow(((100-noiseProbability)/100 + 0.5),1.1));
+
+            var primaryThreshold = (3+0.94*noiseProbability)/100;
+            var secondaryThreshold = (100 - (3+0.94*noiseProbability)) / 100;
 
             var pixelWidth = Math.random()*actualWidth*0.004;
             var pixelHeight = Math.random()*actualHeight*0.004;
 
-            if(currentLum < primaryThreshold && ( previousLum > primaryThreshold || nextLum > primaryThreshold) ){
+            if( (currentLight < primaryThreshold && previousLight > primaryThreshold && nextLight < primaryThreshold) || (currentLight < primaryThreshold && previousLight < primaryThreshold && nextLight > primaryThreshold) ){
                 newCtx.fillStyle = dualColor1;
-                newCtx.globalAlpha = 1;
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
-            }else if(currentLum < secondaryThreshold && ( previousLum > secondaryThreshold || nextLum > secondaryThreshold) ){
+            } else if( (currentLight < secondaryThreshold && previousLight > secondaryThreshold && nextLight < secondaryThreshold) || (currentLight < secondaryThreshold && previousLight < secondaryThreshold && nextLight > secondaryThreshold) ){
                 newCtx.fillStyle = dualColor2;
-                newCtx.globalAlpha = 1;
                 newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), pixelWidth, pixelHeight);
-            }else if(currentLum < primaryThreshold){
-                if(Math.random()<0.1){
-                    newCtx.fillStyle = dualColor1;
-                    newCtx.globalAlpha = 0.5;
-                    newCtx.fillRect(j / 4 % actualWidth, Math.floor(j / 4 / actualWidth), 1, 1);
-                }
             }
+
         }
     } else if(visualizationChoice == "frontier"){
         console.log("running frontier visual");
@@ -1280,17 +1296,6 @@ function drawNewImage(){
     } else if(visualizationChoice == "eclipse"){
         console.log("running eclipse visual");
 
-        if(eclipseLoadCounter == 0){
-            backgroundColor = "#000000";
-            backgroundColorInput.value = "#000000";
-        }
-        eclipseLoadCounter++;
-        drawImageCounter = 0;
-
-        //draw background color
-        newCtx.fillStyle = backgroundColor;
-        newCtx.fillRect(0, 0, actualWidth, actualHeight);
-
         var alpha = 1;
         var threshold = 0.3 + (0.6 * (noiseProbability/100));
 
@@ -1309,6 +1314,33 @@ function drawNewImage(){
                 }
             }
         }
+    } else if(visualizationChoice == "satLight"){
+        console.log("running satLight visual");
+
+        var alpha = 1;
+        var lightnessThreshold = (3+0.7*lightnessLevel)/100;
+        var saturationThreshold = (100 - (3+0.8*saturationLevel))/100;
+        console.log(lightnessLevel + ", "+saturationLevel);
+
+
+        for(var y=0; y < actualHeight; y++ ){
+            for(var x=0; x < actualWidth; x++ ){
+
+                var actualPixel = (y * actualWidth + x) * 4;
+                var actualRed = pixels[actualPixel];
+                var actualGreen = pixels[actualPixel + 1];
+                var actualBlue = pixels[actualPixel + 2];
+                var actualSaturation = rgbToSaturation(actualRed, actualGreen, actualBlue);
+                var actualLightness = rgbToLightness(actualRed, actualGreen, actualBlue);
+                var actualAlpha = 1;
+
+                if(actualLightness < lightnessThreshold || actualSaturation > saturationThreshold){
+                    newCtx.fillStyle = `rgba(${actualRed}, ${actualGreen}, ${actualBlue}, ${actualAlpha})`;
+                    newCtx.fillRect(x, y, 1, 1);
+
+                }
+            }
+        }
     }
 
     const newImageData = newCanvas.toDataURL();
@@ -1322,6 +1354,9 @@ function drawNewImage(){
     //hide the loading screen
     loadingScreen.classList.remove("lockOn");
     loadingScreen.classList.add("hidden");
+
+    previousVisualizationChoice = visualizationChoice;
+
 }
 
 //Helper Functions
@@ -1405,6 +1440,12 @@ function rgbToHue(r, g, b) {
     const bNorm = b / 255;
     const hue = Math.atan2(Math.sqrt(3) * (gNorm - bNorm), 2 * rNorm - gNorm - bNorm);
     return hue * 180 / Math.PI;
+}
+
+function rgbToSaturation(r, g, b) {
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    return (max - min) / max;
 }
 
 function rgbToLightness(r, g, b) {
