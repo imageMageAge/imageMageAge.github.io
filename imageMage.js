@@ -229,6 +229,8 @@ function toggleInputMenu(){
         {menuOptions: [1,0,0,1,0,0,0,0,1,0,0,0], name: "frontier"},
         {menuOptions: [1,0,0,1,0,0,0,0,1,0,0,0], name: "eclipse"},
         {menuOptions: [1,0,0,0,0,0,0,0,1,0,1,1], name: "satLight"},
+        {menuOptions: [1,0,0,1,0,0,0,0,1,1,0,0], name: "edgy"},
+        {menuOptions: [1,0,0,1,0,0,0,0,0,0,0,0], name: "shadow"},
     ];
 
     var styleIndex = menuControlFlags.findIndex(obj => obj.name == visualizationChoice);
@@ -1341,6 +1343,175 @@ function drawNewImage(){
                 }
             }
         }
+    } else if(visualizationChoice == "edgy"){
+        console.log("running edgy visual");
+
+        var lightDataArray = [];
+
+        //generate data array for all pixel lightness values
+        for(var y=0; y < actualHeight; y++ ){
+
+            lightDataArray[y] = [];
+
+            for(var x=0; x < actualWidth; x++ ){
+
+                var actualPixel = (y * actualWidth + x) * 4;
+                var actualRed = pixels[actualPixel];
+                var actualGreen = pixels[actualPixel + 1];
+                var actualBlue = pixels[actualPixel + 2];
+                //var actualLightness = rgbToLightness(actualRed, actualGreen, actualBlue);
+                var actualLum = (0.2989 * actualRed + 0.5870 * actualGreen + 0.1140 * actualBlue)/255;
+
+                lightDataArray[y][x] = actualLum;
+
+            }
+        }
+
+        console.log("lightness data array filled");
+
+        //gaussian smoothing function
+        var smoothedLightDataArray = []
+        var kernelWidth = 5;
+        var kernelHeight = kernelWidth;
+        var middlePixel = Math.floor(kernelWidth/2);
+        var kernelWeights = [0.003663004, 0.014652015, 0.025641026, 0.014652015, 0.003663004, 0.014652015, 0.058608059, 0.095238095, 0.058608059, 0.014652015, 0.025641026, 0.095238095, 0.15018315, 0.095238095, 0.025641026, 0.014652015, 0.058608059, 0.095238095, 0.058608059, 0.014652015, 0.003663004, 0.014652015, 0.025641026, 0.014652015, 0.003663004];
+
+        for(var y=0; y < actualHeight; y++ ){
+            smoothedLightDataArray[y] = [];
+
+            for(var x=0; x < actualWidth; x++ ){
+                
+                var kernelData = [];
+
+                for(var kernelY=0; kernelY<kernelHeight; kernelY++){
+                    for(var kernelX=0; kernelX<kernelWidth; kernelX++){
+                        var pixelXPosition = x + (kernelX-middlePixel);
+                        var pixelYPosition = y + (kernelY-middlePixel);
+                        if(pixelXPosition >= 0 && pixelXPosition < actualWidth && pixelYPosition >= 0 && pixelYPosition < actualHeight){
+                            kernelData.push(lightDataArray[pixelYPosition][pixelXPosition]);
+                        }else{
+                            kernelData.push(0);
+                        }
+                    }
+                }
+
+                var weightedAverageLight = calcWeightedAverage(kernelData,kernelWeights);
+                smoothedLightDataArray[y][x] = weightedAverageLight;
+
+            }
+        }
+
+        //draw vertical edges
+        var alpha = 1;
+        //var threshold = 0.02 + ((0.8*noiseProbability)/100);
+        var threshold = 0.165 - (noiseProbability/100 * 0.15);
+        var pixelWidth = 2;
+        var pixelHeight = 2;
+
+        for(var y=0; y < actualHeight; y++ ){
+            for(var x=0; x < actualWidth; x++ ){
+
+                if(x==0 || y==0 || x==actualWidth-1 || y==actualHeight-1){
+                    continue;
+                }
+                var lightValue = smoothedLightDataArray[y][x];
+                var leftLight = smoothedLightDataArray[y][x-1];
+                var rightLight = smoothedLightDataArray[y][x+1];
+
+                var delta1 = Math.abs(lightValue - leftLight);
+                var delta2 = Math.abs(lightValue - rightLight);
+
+                var red = lightValue * 255;
+                var green = lightValue * 255;
+                var blue = lightValue * 255;
+
+                //if(lightValue < threshold && (leftLight > threshold || rightLight > threshold)){
+                if(delta1 > threshold){
+                    //newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+                    newCtx.fillStyle = dualColor1;
+                    newCtx.globalAlpha = 0.5;
+                    newCtx.fillRect(x, y, pixelWidth, pixelHeight);
+                }
+
+            }
+        }
+
+        //draw horizontal edges
+        for(var y=0; y < actualHeight; y++ ){
+            for(var x=0; x < actualWidth; x++ ){
+
+                if(x==0 || y==0 || x==actualWidth-1 || y==actualHeight-1){
+                    continue;
+                }
+                var lightValue = smoothedLightDataArray[y][x];
+                var topLight = smoothedLightDataArray[y-1][x];
+                var bottomLight = smoothedLightDataArray[y+1][x];
+
+                var delta1 = Math.abs(lightValue - topLight);
+                var delta2 = Math.abs(lightValue - bottomLight);
+
+                var red = lightValue * 255;
+                var green = lightValue * 255;
+                var blue = lightValue * 255;
+
+                //if(lightValue < threshold && (topLight > threshold || bottomLight > threshold)){
+                if(delta1 > threshold){
+                    //newCtx.fillStyle = `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+                    newCtx.fillStyle = dualColor2;
+                    newCtx.globalAlpha = 0.5;
+                    newCtx.fillRect(x, y, pixelWidth, pixelHeight);
+                }
+
+            }
+        }
+
+    } else if(visualizationChoice == "shadow"){
+
+        //faithful reproduction
+        newCtx.drawImage(originalImage, 0, 0);
+
+        var numLayers = 4;
+        var alpha = 0.3;
+        var maxXOffset = 0.03 * actualWidth;
+        var maxYOffset = 0.03 * actualHeight
+
+        for(var layerCounter=0; layerCounter<numLayers; layerCounter++){
+            
+            var xOffset = Math.ceil(randomBM()*maxXOffset - (maxXOffset/2));
+            var yOffset = Math.ceil(randomBM()*maxYOffset - (maxYOffset/2));
+
+            for(var y=0; y < actualHeight; y++ ){
+    
+                for(var x=0; x < actualWidth; x++ ){
+    
+                    var newX = x+xOffset;
+                    var newY = y+yOffset;
+                    if(newX<0 || newX >= actualWidth || newY<0 || newY>= actualHeight){
+                        continue;
+                    }
+
+                    var actualPixel = (y * actualWidth + x) * 4;
+                    var actualRed = pixels[actualPixel];
+                    var actualGreen = pixels[actualPixel + 1];
+                    var actualBlue = pixels[actualPixel + 2];
+                    var actualLum = (0.2989 * actualRed + 0.5870 * actualGreen + 0.1140 * actualBlue)/255;
+    
+                    /*
+                    if(actualLum < 0.3){
+                        continue;
+                    }
+                    */
+
+                    newCtx.fillStyle = `rgba(${actualRed}, ${actualGreen}, ${actualBlue}, ${alpha})`;
+                    newCtx.fillRect(x+xOffset, y+yOffset, 1, 1);
+    
+                }
+            }
+
+        }
+
+
+        
     }
 
     const newImageData = newCanvas.toDataURL();
@@ -1454,6 +1625,17 @@ function rgbToLightness(r, g, b) {
     return (max + min) / 2 / 255;
 }
 
+//returns random number between 0-1 based on normal distribution
+function randomBM() {
+    let u = 0, v = 0;
+    while(u === 0) u = Math.random(); //Converting [0,1) to (0,1)
+    while(v === 0) v = Math.random();
+    let num = Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+    num = num / 10.0 + 0.5; // Translate to 0 -> 1
+    if (num > 1 || num < 0) return randn_bm() // resample between 0 and 1
+    return num
+}
+
 function extractRGB(rgbString) {
     const rgbRegex = /rgb\((\d+),\s*(\d+),\s*(\d+)\)/;
     const match = rgbString.match(rgbRegex);
@@ -1466,6 +1648,14 @@ function extractRGB(rgbString) {
     } else {
         return null;
     }
+}
+
+function calcWeightedAverage(data,weights){
+    var weightedAverage = 0;
+    for(var i=0; i<data.length; i++){
+        weightedAverage += data[i]*weights[i];
+    }
+    return weightedAverage;
 }
 
 function getAverageColor(chosenPixels) {
